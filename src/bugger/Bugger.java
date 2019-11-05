@@ -1,7 +1,7 @@
 package bugger;
 
 import bugger.dataAccessInterface.DataProxy;
-import bugger.handlers.*;
+import bugger.httpshandlers.*;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;

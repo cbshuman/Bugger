@@ -1,4 +1,4 @@
-package bugger.handlers;
+package bugger.httpshandlers;
 
 import bugger.dataAccess.CookieData;
 import bugger.dataAccessInterface.DataProxy;
@@ -29,16 +29,23 @@ public class LoginHandler implements HttpHandler
 			LoginDetails login = new Gson().fromJson(Utility.InputStreamToString(exchange.getRequestBody()), LoginDetails.class);
 			
             System.out.println("--  '" + login.username + "'  is attempting to login  --");
+            System.out.println("Provided (Username:Password) : (" +login.username + ":" + login.password + ")");
 
 			User user = DataProxy.GetUserByParameter(login.username, "username");
+
 			if(user != null)
 				{
-				loginSuccess = user.password.equals(User.HashPassword(login.password));
+
+				loginSuccess = user.CompareUnhashedPassword(login.password);
+
+				System.out.println("Password Comparision: " + loginSuccess);
+				//System.out.println(user.password.GetHashedPassword() );
+				//System.out.println(Password.HashPassword(login.password) );
 				}
 
 			if(loginSuccess == true)
 				{
-				System.out.println("Guess they get to log in!");
+				System.out.println("-- Correct Login Credentials --");
 				//Create a cookie for their session
 				Cookie cookie = CookieData.CreateNewCookie(user.userID);
 
@@ -56,7 +63,7 @@ public class LoginHandler implements HttpHandler
 				}
 			else
 				{
-				System.out.println("Login was a failure");
+				System.out.println("-- Login Failed -- \n");
 				exchange.sendResponseHeaders(HttpURLConnection.HTTP_UNAUTHORIZED, 0);
 				returnMessage = "Invalid username/password combination!";
 				}

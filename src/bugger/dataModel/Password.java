@@ -12,11 +12,28 @@ public class Password extends DataModel
 		hashedPassword = HashPassword(unhashedPassword);
 		}
 
+	public Password(String password, boolean isHashed)
+		{
+		if(isHashed)
+			{
+			hashedPassword = password;
+			}
+		else
+			{
+			hashedPassword = HashPassword(password);
+			}
+		}
+
+	public String GetHashedPassword()
+		{
+		return(hashedPassword);
+		}
+
 	public boolean CompareUnhashedPassword(String unhashedInput)
 		{
 		String hashedInput = HashPassword(unhashedInput);
 
-		return(hashedPassword.equals(unhashedInput));
+		return(hashedPassword.equals(hashedInput));
 		}
 
 	//Hashes a password

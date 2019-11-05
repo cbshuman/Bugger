@@ -1,5 +1,7 @@
-package bugger.dataAccess;
+package bugger.dataAccessInterface.SQLDataAccess;
 
+import bugger.dataAccess.DataAccess;
+import bugger.dataAccessInterface.IcookieAccess;
 import bugger.dataModel.Cookie;
 
 import java.sql.Connection;
@@ -10,11 +12,12 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class CookieData
+public class SQL_CookieAccess implements IcookieAccess
 	{
 	private static String timeFormat = "yyyy-MM-dd HH:mm:ss";
 
-	public static Cookie CreateNewCookie(String userID)
+	@Override
+	public Cookie CreateNewCookie(String userID)
 		{
 		Date date = new Date();
 		DateFormat dateFormat = new SimpleDateFormat(timeFormat);
@@ -27,21 +30,22 @@ public class CookieData
 			Connection connect = DriverManager.getConnection(DataAccess.databaseConnection);
 			Statement statement = connect.createStatement();
 			statement.executeUpdate("INSERT INTO Cookies(cookieID,userID,timestamp) VALUES ('"
-									+ cookieID + "','"
-									+ userID + "','"
-									+ timestamp + "')");
+					+ cookieID + "','"
+					+ userID + "','"
+					+ timestamp + "')");
 			connect.close();
 			}
 		catch (Exception e)
 			{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
-        	}
+			}
 
 		return(new Cookie(cookieID, userID, timestamp));
 		}
 
-	public static String GetUserFromCookie(String cookieID)
+	@Override
+	public String GetUserIDFromCookie(String cookieID)
 		{
 		String returnID = null;
 
@@ -49,7 +53,7 @@ public class CookieData
 			{
 			Connection connect = DriverManager.getConnection(DataAccess.databaseConnection);
 			Statement statement = connect.createStatement();
-		
+
 			ResultSet result = statement.executeQuery("SELECT userID FROM Cookies WHERE cookieID = '" + cookieID + "'");
 
 			if(result.next())
@@ -61,13 +65,14 @@ public class CookieData
 			}
 		catch (Exception e)
 			{
-			System.out.println(e.getMessage()); 
-        	}
+			System.out.println(e.getMessage());
+			}
 
 		return(returnID);
 		}
 
-	public static boolean VerifyCookie(String cookieID)
+	@Override
+	public boolean VerifyCookie(String cookieID)
 		{
 		boolean returnValue = false;
 
@@ -93,14 +98,14 @@ public class CookieData
 					returnValue = true;
 					}
 				}
-			
+
 			connect.close();
 			}
 		catch (Exception e)
 			{
-			System.out.println(e.getMessage()); 
-        	}
-	
+			System.out.println(e.getMessage());
+			}
+
 		return(returnValue);
 		}
 	}

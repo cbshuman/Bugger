@@ -1,6 +1,7 @@
 package bugger.dataAccessInterface.SQLDataAccess;
 
 import bugger.dataAccessInterface.IuserAccess;
+import bugger.dataModel.Password;
 import bugger.dataModel.User;
 
 import java.sql.Connection;
@@ -52,14 +53,15 @@ public class SQL_UserAccess implements IuserAccess
 				String userID = result.getString("userID");
 				String username = result.getString("username");
 				String email = result.getString("email");
-				String password = result.getString("password");
+				String hashedPassword = result.getString("password");
 				String alias = result.getString("alias");
 				String firstName = result.getString("firstName");
 				String lastName = result.getString("lastName");
 				boolean enabled = result.getBoolean("enabled");
 
-				if(username != null && email != null && password != null && firstName != null && lastName != null)
+				if(username != null && email != null && hashedPassword != null && firstName != null && lastName != null)
 					{
+					Password password = new Password(hashedPassword,true);
 					returnValue = new User(userID,username,email,password,alias,firstName,lastName,enabled);
 					}
 				}
@@ -90,7 +92,7 @@ public class SQL_UserAccess implements IuserAccess
 								    + targetUser.userID + "','"
 								    + targetUser.username + "','"
 								    + targetUser.email + "','"
-								    + targetUser.password + "','"
+								    + targetUser.password.GetHashedPassword() + "','"
 								    + targetUser.alias + "','"
 								    + targetUser.firstName + "','"
 								    + targetUser.lastName + "')");

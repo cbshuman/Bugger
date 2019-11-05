@@ -1,4 +1,4 @@
-package bugger.handlers;
+package bugger.httpshandlers;
 
 import bugger.dataAccess.CookieData;
 import bugger.dataAccess.ProjectData;

@@ -2,8 +2,6 @@ package bugger.dataModel;
 
 import bugger.dataAccess.DataAccess;
 
-import java.util.Random;
-
 public class User extends DataModel
 	{
 	public String userID;
@@ -16,6 +14,7 @@ public class User extends DataModel
 	public boolean enabled;
 	public Permission[] permissions;
 
+	//Creates a new user with an unhashed password
 	public User(String userID, String username, String email, String password, String alias, String firstName, String lastName, boolean enabled)
 		{
 		if(username == null || email == null || password == null || firstName == null || lastName == null)
@@ -34,9 +33,33 @@ public class User extends DataModel
 		GetPermissions();
 		}
 
+	//Creates a new user with a hashed password
+	public User(String userID, String username, String email, Password password, String alias, String firstName, String lastName, boolean enabled)
+		{
+		if(username == null || email == null || password == null || firstName == null || lastName == null)
+			{
+			return;
+			}
+		this.userID = userID;
+		this.username = username;
+		this.email =  email;
+		this.password = password;
+		this.alias = alias;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.enabled = enabled;
+
+		GetPermissions();
+		}
+
 	public void GetPermissions()
 		{
 		//permissions = UserData.GetUserPermissions(username);
+		}
+
+	public boolean CompareUnhashedPassword(String unhashedPassword)
+		{
+		return(password.CompareUnhashedPassword(unhashedPassword));
 		}
 
 	public boolean HasPermission(String permissionName)
@@ -70,24 +93,6 @@ public class User extends DataModel
 		while(returnValue.length() < 35)
 			{
 			returnValue.append(0);
-			}
-
-		return(returnValue.toString());
-		}
-
-	//Hashes a password
-	public static String HashPassword(String password)
-		{
-		StringBuilder returnValue = new StringBuilder();
-		long seed = (DataAccess.salt * password.charAt(0) + password.charAt(password.length()-1) );
-
-		Random gen = new Random();
-		gen.setSeed(seed);
-
-		for(int i = 0; i < 255; i++)
-			{
-			int indexAlpNum = (int)(gen.nextFloat() * (alpNum.length() - 1));
-			returnValue.append(alpNum.charAt(indexAlpNum));
 			}
 
 		return(returnValue.toString());

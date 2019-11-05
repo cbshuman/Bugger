@@ -1,4 +1,4 @@
-package bugger.handlers;
+package bugger.httpshandlers;
 
 import bugger.utility.Utility;
 import com.sun.net.httpserver.HttpExchange;

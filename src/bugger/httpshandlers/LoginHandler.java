@@ -1,9 +1,9 @@
 package bugger.httpshandlers;
 
-import bugger.dataAccess.CookieData;
 import bugger.dataAccessInterface.DataProxy;
-import bugger.dataModel.Cookie;
-import bugger.dataModel.User;
+import bugger.dataModel.clientModel.ClientUser;
+import bugger.dataModel.serverModel.Cookie;
+import bugger.dataModel.serverModel.User;
 import bugger.utility.Utility;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
@@ -12,9 +12,6 @@ import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class LoginHandler implements HttpHandler
 	{
@@ -45,21 +42,16 @@ public class LoginHandler implements HttpHandler
 
 			if(loginSuccess == true)
 				{
-				System.out.println("-- Correct Login Credentials --");
 				//Create a cookie for their session
-				Cookie cookie = CookieData.CreateNewCookie(user.userID);
-
-				//Add the cookie to the headers
-				Date today = new Date();
-				Date currentDate = new Date(today.getTime() + (1000 * 60 * 60 * 24));
-				DateFormat dateFormat = new SimpleDateFormat(timeFormat);
-				
-				String timestamp = dateFormat.format(currentDate);
+				Cookie cookie = DataProxy.CreateNewCookie(user.userID);
 				
 				exchange.getResponseHeaders().add("Set-Cookie", "UserID = " + cookie.cookieID + "; Path=/; Max-Age= 86400;");
+				exchange.getResponseHeaders().add("Set-Cookie", "UserID = " + cookie.userID + "; Path=/; Max-Age= 86400;");
 
-				returnMessage = new Gson().toJson(new ReturnUser(user));
-				exchange.sendResponseHeaders(HttpURLConnection.HTTP_CREATED, returnMessage.length());
+				returnMessage = new Gson().toJson(new ClientUser(user));
+				exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, returnMessage.length());
+
+				System.out.println("-- Correct Login Credentials -- \n");
 				}
 			else
 				{

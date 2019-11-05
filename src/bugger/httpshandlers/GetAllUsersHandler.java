@@ -1,19 +1,19 @@
 package bugger.httpshandlers;
 
-import bugger.dataAccess.CookieData;
 import bugger.dataAccessInterface.DataProxy;
-import bugger.dataModel.User;
+import bugger.dataModel.clientModel.ClientUser;
+import bugger.dataModel.serverModel.User;
+import bugger.utility.HandlerUtilites;
 import bugger.utility.Utility;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
-public class GetAllUsersHandler implements HttpHandler
+public class GetAllUsersHandler extends SecureHTTPHandler
 	{
 	public void handle(HttpExchange exchange) throws IOException
 		{
@@ -37,14 +37,14 @@ public class GetAllUsersHandler implements HttpHandler
 		String cookieContents = HandlerUtilites.GetCookieIDFromCookie(headers);
 
 		System.out.println(" -> Authenticating Cookie: " + cookieContents);
-		if(CookieData.VerifyCookie(cookieContents))
+		if(HasValidCookie(headers))
 			{
 			User[] users = DataProxy.GetAllUsers();
-			ReturnUser[] jsonResponce = new ReturnUser[users.length];
+			ClientUser[] jsonResponce = new ClientUser[users.length];
 
 			for(int i = 0; i < users.length; i++)
 				{
-				jsonResponce[i] = new ReturnUser(users[i]);
+				jsonResponce[i] = new ClientUser(users[i]);
 				}
 
 			returnMessage = new Gson().toJson(jsonResponce);

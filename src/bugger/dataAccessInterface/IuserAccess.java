@@ -1,6 +1,6 @@
 package bugger.dataAccessInterface;
 
-import bugger.dataModel.User;
+import bugger.dataModel.serverModel.User;
 
 public interface IuserAccess
     {

@@ -1,19 +1,19 @@
 package bugger.httpshandlers;
 
-import bugger.dataAccess.CookieData;
-import bugger.dataModel.User;
+import bugger.dataModel.clientModel.ClientUser;
+import bugger.dataModel.serverModel.User;
+import bugger.utility.HandlerUtilites;
 import bugger.utility.Utility;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
 
-public class GetUserHandler implements HttpHandler
+public class GetUserHandler extends SecureHTTPHandler
 	{
 	public void handle(HttpExchange exchange) throws IOException
 		{
@@ -29,10 +29,10 @@ public class GetUserHandler implements HttpHandler
 
 			System.out.print(" -> Cookie # " + cookieContents);
 
-			if(CookieData.VerifyCookie(cookieContents))
+			if(HasValidCookie(headers))
 				{
 				User user = HandlerUtilites.GetUserFromCookie(cookieContents);
-				returnMessage = new Gson().toJson(new ReturnUser(user));
+				returnMessage = new Gson().toJson(new ClientUser(user));
 
 				exchange.sendResponseHeaders(HttpURLConnection.HTTP_CREATED, returnMessage.length());
 				}

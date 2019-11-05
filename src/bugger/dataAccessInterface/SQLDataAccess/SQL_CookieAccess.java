@@ -1,15 +1,14 @@
 package bugger.dataAccessInterface.SQLDataAccess;
 
-import bugger.dataAccess.DataAccess;
 import bugger.dataAccessInterface.IcookieAccess;
-import bugger.dataModel.Cookie;
+import bugger.dataModel.serverModel.Cookie;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class SQL_CookieAccess implements IcookieAccess
@@ -22,12 +21,12 @@ public class SQL_CookieAccess implements IcookieAccess
 		Date date = new Date();
 		DateFormat dateFormat = new SimpleDateFormat(timeFormat);
 
-		String cookieID = Cookie.GenerateCookieID();
+		String cookieID = Cookie.GenerateCookieID((int)date.getTime());
 		String timestamp = dateFormat.format(date);
 
 		try
 			{
-			Connection connect = DriverManager.getConnection(DataAccess.databaseConnection);
+			Connection connect = SQLDataAccess.GetDatabaseConnection();
 			Statement statement = connect.createStatement();
 			statement.executeUpdate("INSERT INTO Cookies(cookieID,userID,timestamp) VALUES ('"
 					+ cookieID + "','"
@@ -45,13 +44,45 @@ public class SQL_CookieAccess implements IcookieAccess
 		}
 
 	@Override
+	public Cookie[] GetUserCookies(String userID)
+		{
+		ArrayList<Cookie> returnCookies = new ArrayList<>();
+
+		try
+			{
+			Connection connect = SQLDataAccess.GetDatabaseConnection();
+
+			Statement statement = connect.createStatement();
+			ResultSet result = statement.executeQuery("SELECT * FROM Cookies WHERE userID = '" + userID + "'" );
+
+			while(result.next())
+				{
+				String cookieID = result.getString("cookieID");
+				String timestamp = result.getString("timestamp");
+				returnCookies.add(new Cookie(cookieID,userID,timestamp));
+				}
+
+			connect.close();
+			}
+		catch (Exception e)
+			{
+			e.printStackTrace();
+			}
+
+		//Transform the results into an array and return
+		Cookie[] c = new Cookie[returnCookies.size()];
+		returnCookies.toArray(c);
+		return (c);
+		}
+
+	@Override
 	public String GetUserIDFromCookie(String cookieID)
 		{
 		String returnID = null;
 
 		try
 			{
-			Connection connect = DriverManager.getConnection(DataAccess.databaseConnection);
+			Connection connect = SQLDataAccess.GetDatabaseConnection();
 			Statement statement = connect.createStatement();
 
 			ResultSet result = statement.executeQuery("SELECT userID FROM Cookies WHERE cookieID = '" + cookieID + "'");
@@ -78,7 +109,7 @@ public class SQL_CookieAccess implements IcookieAccess
 
 		try
 			{
-			Connection connect = DriverManager.getConnection(DataAccess.databaseConnection);
+			Connection connect = SQLDataAccess.GetDatabaseConnection();
 			Statement statement = connect.createStatement();
 			ResultSet result = statement.executeQuery("SELECT * FROM Cookies WHERE cookieID = '" + cookieID + "'");
 

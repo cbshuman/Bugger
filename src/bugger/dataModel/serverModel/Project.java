@@ -1,4 +1,4 @@
-package bugger.dataModel;
+package bugger.dataModel.serverModel;
 
 import bugger.dataAccess.DataAccess;
 import bugger.dataAccess.ProjectData;

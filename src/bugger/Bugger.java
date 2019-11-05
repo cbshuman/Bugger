@@ -40,7 +40,7 @@ public class Bugger
         //Try getting the server all up and running
         try
             {
-            System.out.println("Starting up Bugger v0.3 [||] on Port: " + portAddress);
+            System.out.println("Starting up Bugger v0.3 [| Port: " + portAddress + " |]");
             //Set up the port
             server = HttpServer.create(port,0);
 

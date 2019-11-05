@@ -1,20 +1,19 @@
 package bugger.httpshandlers;
 
-import bugger.dataAccess.CookieData;
 import bugger.dataAccess.PermissionData;
-import bugger.dataModel.Permission;
-import bugger.dataModel.User;
+import bugger.dataModel.serverModel.Permission;
+import bugger.dataModel.serverModel.User;
+import bugger.utility.HandlerUtilites;
 import bugger.utility.Utility;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
-public class PermissionHandler implements HttpHandler
+public class PermissionHandler extends SecureHTTPHandler
 	{
 	public void handle(HttpExchange exchange) throws IOException
 		{
@@ -42,7 +41,7 @@ public class PermissionHandler implements HttpHandler
 		String cookieContents = HandlerUtilites.GetCookieIDFromCookie(headers);
 
 		System.out.println(" -> Authenticating Cookie: " + cookieContents);
-		if(CookieData.VerifyCookie(cookieContents))
+		if(HasValidCookie(headers))
 			{
 			PermissionJSON permission = new Gson().fromJson(Utility.InputStreamToString(exchange.getRequestBody()), PermissionJSON.class);
 
@@ -109,7 +108,7 @@ public class PermissionHandler implements HttpHandler
 		String cookieContents = HandlerUtilites.GetCookieIDFromCookie(headers);
 
 		System.out.println(" -> Authenticating Cookie: " + cookieContents);
-		if(CookieData.VerifyCookie(cookieContents))
+		if(HasValidCookie(headers))
 			{
 			Permission[] permissions = PermissionData.GetPermissions();
 			PermissionJSON[] jsonResponce = new PermissionJSON[permissions.length];
@@ -145,7 +144,7 @@ public class PermissionHandler implements HttpHandler
 		String cookieContents = HandlerUtilites.GetCookieIDFromCookie(headers);
 
 		System.out.println(" -> Authenticating Cookie: " + cookieContents);
-		if(CookieData.VerifyCookie(cookieContents))
+		if(HasValidCookie(headers))
 			{
 			String permissionName = exchange.getRequestURI().getPath().substring(17);
 			System.out.println(" -> Target Permission: " + permissionName);

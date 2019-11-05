@@ -1,7 +1,7 @@
 package bugger.command;
 
 import bugger.dataAccessInterface.DataProxy;
-import bugger.dataModel.Cookie;
+import bugger.dataModel.serverModel.Cookie;
 
 public class ValidateCookie implements BuggerCommand<Boolean>
 	{

@@ -1,10 +1,12 @@
 package bugger.dataAccessInterface;
 
-import bugger.dataModel.User;
+import bugger.dataModel.serverModel.Cookie;
+import bugger.dataModel.serverModel.User;
 
 public abstract class DataAccess
     {
     protected IuserAccess userAccess;
+    protected IcookieAccess cookieAccess;
 
     public boolean CreateUser(User targetUser)
         {
@@ -37,6 +39,17 @@ public abstract class DataAccess
         return(userAccess.GetUserExisits(username));
         }
 
+    //------------ Cookies --------------- \\
+
+    public Cookie[] GetUserCookies(String username)
+        {
+        return(cookieAccess.GetUserCookies(username));
+        }
+
+    public Cookie CreateNewCookie(String username)
+        {
+        return(cookieAccess.CreateNewCookie(username));
+        }
 
     public abstract void ValidateDatabase();
     }

@@ -1,8 +1,6 @@
-package bugger.httpshandlers;
+package bugger.utility;
 
-import bugger.dataAccess.CookieData;
-import bugger.dataAccessInterface.DataProxy;
-import bugger.dataModel.User;
+import bugger.dataModel.serverModel.User;
 import com.sun.net.httpserver.Headers;
 
 import java.util.Iterator;
@@ -45,9 +43,11 @@ public class HandlerUtilites
 
 	public static User GetUserFromCookie(String cookieContents)
 		{
+		/*
 		String userID = CookieData.GetUserFromCookie(cookieContents);
 		User user = DataProxy.GetUserByParameter(userID,"userID");
 		user.GetPermissions();
-		return(user);
+		 */
+		return(null);
 		}
 	}

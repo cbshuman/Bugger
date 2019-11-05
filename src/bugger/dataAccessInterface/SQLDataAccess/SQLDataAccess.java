@@ -1,7 +1,7 @@
 package bugger.dataAccessInterface.SQLDataAccess;
 
 import bugger.dataAccessInterface.DataAccess;
-import bugger.dataModel.User;
+import bugger.dataModel.serverModel.User;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,6 +18,7 @@ public class SQLDataAccess extends DataAccess
     public SQLDataAccess()
         {
         userAccess = new SQL_UserAccess();
+        cookieAccess = new SQL_CookieAccess();
         }
 
     public static Connection GetDatabaseConnection() throws SQLException
@@ -55,7 +56,7 @@ public class SQLDataAccess extends DataAccess
 
 		    //Create a Table to store user cookies
 		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS Cookies("
-								    + "cookieID VARCHAR(255) NOT NULL PRIMARY KEY UNIQUE,"
+								    + "cookieID VARCHAR(255) NOT NULL,"
 								    + "userID VARCHAR(255) NOT NULL,"
 								    + "timestamp DATETIME NOT NULL,"
 								    + "FOREIGN KEY (userID) REFERENCES User(userID))");

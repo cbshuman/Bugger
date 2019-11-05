@@ -1,15 +1,6 @@
 package bugger.dataAccess;
 
-import bugger.dataModel.Cookie;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
+/*
 public class CookieData
 	{
 	private static String timeFormat = "yyyy-MM-dd HH:mm:ss";
@@ -104,3 +95,4 @@ public class CookieData
 		return(returnValue);
 		}
 	}
+*/

@@ -1,4 +1,6 @@
-package bugger.dataModel;
+package bugger.dataModel.serverModel;
+
+import bugger.dataModel.DataModel;
 
 import java.util.Random;
 

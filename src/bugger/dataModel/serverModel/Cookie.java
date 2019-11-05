@@ -1,6 +1,8 @@
-package bugger.dataModel;
+package bugger.dataModel.serverModel;
 
-import bugger.dataAccess.DataAccess;
+import bugger.dataModel.DataModel;
+
+import java.util.Random;
 
 public class Cookie extends DataModel
 	{
@@ -15,10 +17,11 @@ public class Cookie extends DataModel
 		this.timestamp = timestamp;
 		}
 
-	public static String GenerateCookieID()
+	public static String GenerateCookieID(int seed)
 		{
+		Random rand = new Random(seed);
 		StringBuilder returnValue = new StringBuilder();
-		int number = DataAccess.GetLastID("lastCookieID");
+		int number = rand.nextInt();
 
 		returnValue.append("Cookie_");
 		returnValue.append(number);
@@ -29,5 +32,10 @@ public class Cookie extends DataModel
 			}
 
 		return(returnValue.toString());
+		}
+
+	public boolean ValidTimeStamp()
+		{
+		return(true);
 		}
 	}

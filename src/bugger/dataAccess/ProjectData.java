@@ -1,7 +1,7 @@
 package bugger.dataAccess;
 
-import bugger.dataModel.Permission;
-import bugger.dataModel.Project;
+import bugger.dataModel.serverModel.Permission;
+import bugger.dataModel.serverModel.Project;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

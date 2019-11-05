@@ -1,8 +1,8 @@
 package bugger.dataAccessInterface.SQLDataAccess;
 
 import bugger.dataAccessInterface.IuserAccess;
-import bugger.dataModel.Password;
-import bugger.dataModel.User;
+import bugger.dataModel.serverModel.Password;
+import bugger.dataModel.serverModel.User;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

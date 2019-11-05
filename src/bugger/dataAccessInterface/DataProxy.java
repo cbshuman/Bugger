@@ -1,7 +1,8 @@
 package bugger.dataAccessInterface;
 
 import bugger.dataAccessInterface.SQLDataAccess.SQLDataAccess;
-import bugger.dataModel.User;
+import bugger.dataModel.serverModel.Cookie;
+import bugger.dataModel.serverModel.User;
 
 public class DataProxy
     {
@@ -29,6 +30,8 @@ public class DataProxy
         dataAccess.ValidateDatabase();
         }
 
+    // ----  User Data ---- \\
+
     public static User[] GetAllUsers()
         {
         return(dataAccess.GetAllUsers());
@@ -54,4 +57,15 @@ public class DataProxy
         return(dataAccess.GetUserExisits(username));
         }
 
+    // ----  Cookie Data ---- \\
+
+    public static Cookie CreateNewCookie(String username)
+        {
+        return(dataAccess.CreateNewCookie(username));
+        }
+
+    public static Cookie[] GetUserCookies(String username)
+        {
+        return(dataAccess.GetUserCookies(username));
+        }
     }

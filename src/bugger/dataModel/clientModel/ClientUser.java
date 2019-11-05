@@ -1,8 +1,8 @@
-package bugger.httpshandlers;
+package bugger.dataModel.clientModel;
 
-import bugger.dataModel.User;
+import bugger.dataModel.serverModel.User;
 
-public class ReturnUser
+public class ClientUser
 	{
 	public String userID;
 	public String username;
@@ -13,7 +13,7 @@ public class ReturnUser
 	public boolean enabled;
 	public String[] permissions;
 
-	public ReturnUser(User userIn)
+	public ClientUser(User userIn)
 		{
 		username = userIn.username;
 		email = userIn.email;

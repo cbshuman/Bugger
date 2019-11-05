@@ -1,19 +1,18 @@
 package bugger.httpshandlers;
 
-import bugger.dataAccess.CookieData;
 import bugger.dataAccess.ProjectData;
-import bugger.dataModel.Project;
+import bugger.dataModel.serverModel.Project;
+import bugger.utility.HandlerUtilites;
 import bugger.utility.Utility;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
-public class ProjectHandler implements HttpHandler
+public class ProjectHandler extends SecureHTTPHandler
 	{
 	public void handle(HttpExchange exchange) throws IOException
 		{
@@ -37,7 +36,7 @@ public class ProjectHandler implements HttpHandler
 		String cookieContents = HandlerUtilites.GetCookieIDFromCookie(headers);
 
 		System.out.println(" -> Authenticating Cookie: " + cookieContents);
-		if(CookieData.VerifyCookie(cookieContents))
+		if(HasValidCookie(headers))
 			{
 			System.out.println(" -> Creating Project");
 			ProjectJSON newProject = new Gson().fromJson(Utility.InputStreamToString(exchange.getRequestBody()), ProjectJSON.class);
@@ -75,7 +74,7 @@ public class ProjectHandler implements HttpHandler
 		String cookieContents = HandlerUtilites.GetCookieIDFromCookie(headers);
 
 		System.out.println(" -> Authenticating Cookie: " + cookieContents);
-		if(CookieData.VerifyCookie(cookieContents))
+		if(HasValidCookie(headers))
 			{
 			Project[] projects = ProjectData.GetProjects();
 			ProjectJSON[] jsonResponce = new ProjectJSON[projects.length];

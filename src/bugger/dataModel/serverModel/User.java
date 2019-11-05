@@ -1,6 +1,7 @@
-package bugger.dataModel;
+package bugger.dataModel.serverModel;
 
 import bugger.dataAccess.DataAccess;
+import bugger.dataModel.DataModel;
 
 public class User extends DataModel
 	{

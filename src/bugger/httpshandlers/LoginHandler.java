@@ -1,6 +1,9 @@
 package bugger.httpshandlers;
 
-import bugger.dataAccessInterface.DataProxy;
+import bugger.command.BuggerCMD;
+import bugger.command.BuggerCommand;
+import bugger.command.CMD_GetUser;
+import bugger.command.CreateCookie;
 import bugger.dataModel.clientModel.ClientUser;
 import bugger.dataModel.serverModel.Cookie;
 import bugger.dataModel.serverModel.User;
@@ -15,6 +18,7 @@ import java.net.HttpURLConnection;
 
 public class LoginHandler implements HttpHandler
 	{
+	public static String CookieString = "BuggerCookie";
 	private static String timeFormat = "d, yyyy/M HH:mm:ss";
 
 	public void handle(HttpExchange exchange) throws IOException
@@ -28,7 +32,8 @@ public class LoginHandler implements HttpHandler
             System.out.println("--  '" + login.username + "'  is attempting to login  --");
             System.out.println("Provided (Username:Password) : (" +login.username + ":" + login.password + ")");
 
-			User user = DataProxy.GetUserByParameter(login.username, "username");
+			BuggerCommand<User> getUserCommand = BuggerCMD.DoCommand(new CMD_GetUser(login.username));
+			User user = getUserCommand.GetReturnValue();
 
 			if(user != null)
 				{
@@ -36,28 +41,40 @@ public class LoginHandler implements HttpHandler
 				loginSuccess = user.CompareUnhashedPassword(login.password);
 
 				System.out.println("Password Comparision: " + loginSuccess);
-				//System.out.println(user.password.GetHashedPassword() );
-				//System.out.println(Password.HashPassword(login.password) );
 				}
 
 			if(loginSuccess == true)
 				{
-				//Create a cookie for their session
-				Cookie cookie = DataProxy.CreateNewCookie(user.userID);
-				
-				exchange.getResponseHeaders().add("Set-Cookie", "UserID = " + cookie.cookieID + "; Path=/; Max-Age= 86400;");
-				exchange.getResponseHeaders().add("Set-Cookie", "UserID = " + cookie.userID + "; Path=/; Max-Age= 86400;");
+				System.out.println("Good good, now to package a response");
 
-				returnMessage = new Gson().toJson(new ClientUser(user));
+				//Create a cookie for their session
+				BuggerCommand<Cookie> cookieCMD = BuggerCMD.DoCommand(new CreateCookie(user.userID));
+				Cookie cookie = cookieCMD.GetReturnValue();
+
+				exchange.getResponseHeaders().add("Set-Cookie", CookieString + " = " + cookie.cookieID + ":" + cookie.userID + "; Path=/; Max-Age= 86400;");
+
+				System.out.println("Set the cookie, now for some json");
+
+				try
+					{
+					returnMessage = new Gson().toJson(new ClientUser(user));
+					}
+				catch (Exception e)
+					{
+					e.printStackTrace();
+					}
+
+				System.out.println("Returning: " + returnMessage);
 				exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, returnMessage.length());
 
-				System.out.println("-- Correct Login Credentials -- \n");
+				System.out.println("-- Login Success! -- \n");
 				}
 			else
 				{
 				System.out.println("-- Login Failed -- \n");
-				exchange.sendResponseHeaders(HttpURLConnection.HTTP_UNAUTHORIZED, 0);
-				returnMessage = "Invalid username/password combination!";
+				returnMessage = "{message : Invalid username/password combination!}";
+
+				exchange.sendResponseHeaders(HttpURLConnection.HTTP_UNAUTHORIZED, returnMessage.length());
 				}
 			}
 

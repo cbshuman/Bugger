@@ -3,12 +3,13 @@ package bugger.command;
 import bugger.dataAccessInterface.DataProxy;
 import bugger.dataModel.serverModel.Cookie;
 
-public class ValidateCookie implements BuggerCommand<Boolean>
+public class ValidateCookie extends BuggerCommand<Boolean>
 	{
 	String username;
+	String cookieID;
 	boolean returnValue = false;
 
-	public ValidateCookie(String username)
+	public ValidateCookie(String username, String cookieID)
 		{
 		this.username = username;
 		}

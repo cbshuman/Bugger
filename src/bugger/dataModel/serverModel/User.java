@@ -50,7 +50,7 @@ public class User extends DataModel
 		this.lastName = lastName;
 		this.enabled = enabled;
 
-		GetPermissions();
+		permissions = new Permission[0];
 		}
 
 	public void GetPermissions()

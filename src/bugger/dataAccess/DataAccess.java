@@ -92,7 +92,6 @@ public class DataAccess
 				System.out.println("admin account not found -- Creating new one. . .");
 				UserData.CreateNewUser("admin", "admin@bugger.admin", "admin", "admin", "Sudo", "Su");
 				}
-
 			UserData.AddUserPermission("admin","admin");
 			*/
 

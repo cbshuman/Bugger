@@ -1,8 +1,14 @@
 package bugger.command;
 
-public interface BuggerCommand<T>
+public abstract class BuggerCommand<T>
 	{
-	void DoCommand();
-	Boolean CommandSuccessful();
-	T GetReturnValue();
+	protected boolean commandSuccessful = false;
+
+	Boolean CommandSuccessful()
+		{
+		return(commandSuccessful);
+		}
+
+	public abstract void DoCommand();
+	public abstract T GetReturnValue();
 	}

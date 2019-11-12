@@ -6,7 +6,7 @@ public class BuggerCMD
 	{
 	private static LinkedList<BuggerCommand> commands = new LinkedList<>();
 
-	public static boolean DoCommand(BuggerCommand command)
+	public static BuggerCommand DoCommand(BuggerCommand command)
 		{
 		command.DoCommand();
 
@@ -17,7 +17,7 @@ public class BuggerCMD
 			commands.add(command);
 			}
 
-		return(returnValue);
+		return(command);
 		}
 
 	public static BuggerCommand GetLastCommand()

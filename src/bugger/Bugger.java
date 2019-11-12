@@ -29,9 +29,6 @@ public class Bugger
             return;
             }
 
-        //Below is older code that will be removed eventually
-        //DataAccess.ValidateDatabase();
-
         //Setting up the ports
         int portAddress = Integer.parseInt(args[0]);
         InetSocketAddress port = new InetSocketAddress(portAddress);
@@ -69,6 +66,11 @@ public class Bugger
         catch(IOException e)
             {
             System.out.println("IOException Detected!");
+            e.printStackTrace();
+            }
+        catch(Exception e)
+            {
+            System.out.println("Exeception Detected!");
             e.printStackTrace();
             }
 

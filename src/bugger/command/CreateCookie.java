@@ -3,10 +3,8 @@ package bugger.command;
 import bugger.dataAccessInterface.DataProxy;
 import bugger.dataModel.serverModel.Cookie;
 
-public class CreateCookie implements BuggerCommand<Cookie>
+public class CreateCookie extends BuggerCommand<Cookie>
 	{
-	private boolean hasRun = false;
-	private boolean runSuccessfully;
 	private String userName;
 	private Cookie returnValue;
 
@@ -18,26 +16,21 @@ public class CreateCookie implements BuggerCommand<Cookie>
 	@Override
 	public void DoCommand()
 		{
-		if(!hasRun)
+		if(!commandSuccessful)
 			{
 			try
 				{
 				returnValue = DataProxy.CreateNewCookie(userName);
-				runSuccessfully = true;
+				commandSuccessful = true;
 				}
 			catch (Exception e)
 				{
 				e.printStackTrace();
 				}
-			hasRun = false;
+			commandSuccessful = false;
 			}
 		}
 
-	@Override
-	public Boolean CommandSuccessful()
-		{
-		return runSuccessfully;
-		}
 
 	@Override
 	public Cookie GetReturnValue()

@@ -18,6 +18,7 @@ public class SQL_CookieAccess implements IcookieAccess
 	@Override
 	public Cookie CreateNewCookie(String userID)
 		{
+		//System.out.println("Creating Cookie");
 		Date date = new Date();
 		DateFormat dateFormat = new SimpleDateFormat(timeFormat);
 
@@ -40,6 +41,7 @@ public class SQL_CookieAccess implements IcookieAccess
 			e.printStackTrace();
 			}
 
+		//System.out.println("Created Cookie!");
 		return(new Cookie(cookieID, userID, timestamp));
 		}
 

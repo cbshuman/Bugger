@@ -6,6 +6,5 @@ public interface IcookieAccess
 	{
 	Cookie CreateNewCookie(String userID);
 	Cookie[] GetUserCookies(String userID);
-	String GetUserIDFromCookie(String cookieID);
-	boolean VerifyCookie(String cookieID);
+	boolean DeleteCookie(String cookieID);
 	}

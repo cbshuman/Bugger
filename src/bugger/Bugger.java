@@ -2,6 +2,7 @@ package bugger;
 
 import bugger.dataAccessInterface.DataProxy;
 import bugger.httpshandlers.*;
+import bugger.serialization.SerializationInterface;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
@@ -18,10 +19,16 @@ public class Bugger
             return;
             }
 
+        //Both of these should be pulled from a config file at some point, but for now
+        //We'll just do it this way
         try
             {
+            //Setup the database
             DataProxy.SelectDatabase(DataProxy.DatabaseType.SQL);
             DataProxy.ValidateDatabase();
+
+            //Setup the serializers
+            SerializationInterface.SetSerializer(SerializationInterface.SerializeType.gson);
             }
         catch(Exception e)
             {

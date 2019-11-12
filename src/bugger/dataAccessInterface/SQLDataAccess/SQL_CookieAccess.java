@@ -6,24 +6,16 @@ import bugger.dataModel.serverModel.Cookie;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class SQL_CookieAccess implements IcookieAccess
 	{
-	private static String timeFormat = "yyyy-MM-dd HH:mm:ss";
-
 	@Override
 	public Cookie CreateNewCookie(String userID)
 		{
 		//System.out.println("Creating Cookie");
-		Date date = new Date();
-		DateFormat dateFormat = new SimpleDateFormat(timeFormat);
-
-		String cookieID = Cookie.GenerateCookieID((int)date.getTime());
-		String timestamp = dateFormat.format(date);
+		String timeStamp = Cookie.GetCurrentTimeStamp();
+		String cookieID = Cookie.GenerateCookieID();
 
 		try
 			{
@@ -32,7 +24,7 @@ public class SQL_CookieAccess implements IcookieAccess
 			statement.executeUpdate("INSERT INTO Cookies(cookieID,userID,timestamp) VALUES ('"
 					+ cookieID + "','"
 					+ userID + "','"
-					+ timestamp + "')");
+					+ timeStamp + "')");
 			connect.close();
 			}
 		catch (Exception e)
@@ -42,7 +34,7 @@ public class SQL_CookieAccess implements IcookieAccess
 			}
 
 		//System.out.println("Created Cookie!");
-		return(new Cookie(cookieID, userID, timestamp));
+		return(new Cookie(cookieID, userID, timeStamp));
 		}
 
 	@Override
@@ -78,67 +70,27 @@ public class SQL_CookieAccess implements IcookieAccess
 		}
 
 	@Override
-	public String GetUserIDFromCookie(String cookieID)
-		{
-		String returnID = null;
-
-		try
-			{
-			Connection connect = SQLDataAccess.GetDatabaseConnection();
-			Statement statement = connect.createStatement();
-
-			ResultSet result = statement.executeQuery("SELECT userID FROM Cookies WHERE cookieID = '" + cookieID + "'");
-
-			if(result.next())
-				{
-				returnID = result.getString("userID");
-				}
-
-			connect.close();
-			}
-		catch (Exception e)
-			{
-			System.out.println(e.getMessage());
-			}
-
-		return(returnID);
-		}
-
-	@Override
-	public boolean VerifyCookie(String cookieID)
+	public boolean DeleteCookie(String cookieID)
 		{
 		boolean returnValue = false;
-
 		try
 			{
 			Connection connect = SQLDataAccess.GetDatabaseConnection();
 			Statement statement = connect.createStatement();
-			ResultSet result = statement.executeQuery("SELECT * FROM Cookies WHERE cookieID = '" + cookieID + "'");
 
-			if(result.next())
-				{
-				DateFormat dateFormat = new SimpleDateFormat(timeFormat);
-				String timestamp = result.getString("timestamp");
-
-				//System.out.println(timestamp);
-
-				Date currentDate = new Date();
-				Date cookieDate = dateFormat.parse(timestamp);
-
-				long difference = cookieDate.getTime() - currentDate.getTime();
-				if((difference / (1000*60*60*24)) <= 1)
-					{
-					returnValue = true;
-					}
-				}
-
+			statement.executeUpdate(" DELETE FROM Cookies WHERE cookieID = '" + cookieID + "'");
 			connect.close();
+
+			returnValue = true;
 			}
 		catch (Exception e)
 			{
 			System.out.println(e.getMessage());
+			e.printStackTrace();
 			}
 
+		//System.out.println("Created Cookie!");
 		return(returnValue);
 		}
+
 	}

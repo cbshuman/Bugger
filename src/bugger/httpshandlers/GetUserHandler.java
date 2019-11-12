@@ -1,10 +1,11 @@
 package bugger.httpshandlers;
 
-import bugger.dataModel.clientModel.ClientUser;
+import bugger.command.BuggerCMD;
+import bugger.command.BuggerCommand;
+import bugger.command.CMD_GetUserByUsername;
 import bugger.dataModel.serverModel.User;
-import bugger.utility.HandlerUtilites;
+import bugger.serialization.SerializationInterface;
 import bugger.utility.Utility;
-import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
@@ -22,25 +23,27 @@ public class GetUserHandler extends SecureHTTPHandler
 		if(exchange.getRequestMethod().toLowerCase().equals("get"))
 			{
 			System.out.println("\n -- Getting User Info  --");
-			System.out.println(" -> Authenticating: ");
 			Headers headers = exchange.getRequestHeaders();
-
-			String cookieContents = HandlerUtilites.GetCookieIDFromCookie(headers);
-
-			System.out.print(" -> Cookie # " + cookieContents);
 
 			if(HasValidCookie(headers))
 				{
-				User user = HandlerUtilites.GetUserFromCookie(cookieContents);
-				returnMessage = new Gson().toJson(new ClientUser(user));
+				System.out.println(" -> Got Valid Cookie --");
 
+				//Get the user
+				BuggerCommand<User> userCommand = BuggerCMD.DoCommand(new CMD_GetUserByUsername(GetHandlerUserID()));
+				User user = userCommand.GetReturnValue();
+				//Return the user details
+				returnMessage = SerializationInterface.SerializeUser(user);
 				exchange.sendResponseHeaders(HttpURLConnection.HTTP_CREATED, returnMessage.length());
+				//TODO: Remove debugging statements
+				System.out.println(" -> Sent User Information  --");
 				}
 			else
 				{
 				//remove invalid cookies
-				exchange.sendResponseHeaders(HttpURLConnection.HTTP_UNAUTHORIZED, 0);
-				returnMessage = "Invalid or expired Cookie!";
+				returnMessage = "{ message : Invalid or expired Cookie! }";
+				exchange.sendResponseHeaders(HttpURLConnection.HTTP_UNAUTHORIZED, returnMessage.length());
+				System.out.println(" -> Invalid Cookies");
 				}
 
 			//System.out.println(headers.entrySet());

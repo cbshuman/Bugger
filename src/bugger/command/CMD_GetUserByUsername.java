@@ -3,12 +3,12 @@ package bugger.command;
 import bugger.dataAccessInterface.DataProxy;
 import bugger.dataModel.serverModel.User;
 
-public class CMD_GetUser extends BuggerCommand<User>
+public class CMD_GetUserByUsername extends BuggerCommand<User>
 	{
-	String username;
-	User user;
+	private String username;
+	private User user;
 
-	public CMD_GetUser(String username)
+	public CMD_GetUserByUsername(String username)
 		{
 		this.username = username;
 		user = null;

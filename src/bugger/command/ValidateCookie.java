@@ -5,9 +5,9 @@ import bugger.dataModel.serverModel.Cookie;
 
 public class ValidateCookie extends BuggerCommand<Boolean>
 	{
-	String username;
-	String cookieID;
-	boolean returnValue = false;
+	private String username;
+	private String cookieID;
+	private boolean returnValue = false;
 
 	public ValidateCookie(String username, String cookieID)
 		{
@@ -19,15 +19,15 @@ public class ValidateCookie extends BuggerCommand<Boolean>
 		{
 		Cookie[] cookies = DataProxy.GetUserCookies(username);
 
-		for(int i = 0; i < cookies.length; i++)
+		for (Cookie cookie : cookies)
 			{
-			if(cookies[i].ValidTimeStamp())
+			if (cookie.HasValidTimeStamp())
 				{
 				returnValue = true;
 				}
 			else
 				{
-				//TODO : Delete old cookies
+				DataProxy.DeleteCookie(cookie.cookieID);
 				}
 			}
 		}

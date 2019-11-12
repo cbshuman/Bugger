@@ -46,6 +46,11 @@ public abstract class DataAccess
         return(cookieAccess.GetUserCookies(username));
         }
 
+    public boolean DeleteCookie(String cookieID)
+        {
+        return(cookieAccess.DeleteCookie(cookieID));
+        }
+
     public Cookie CreateNewCookie(String username)
         {
         return(cookieAccess.CreateNewCookie(username));

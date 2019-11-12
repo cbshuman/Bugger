@@ -64,6 +64,11 @@ public class DataProxy
         return(dataAccess.CreateNewCookie(username));
         }
 
+    public static boolean DeleteCookie(String cookieID)
+        {
+        return(dataAccess.DeleteCookie(cookieID));
+        }
+
     public static Cookie[] GetUserCookies(String username)
         {
         return(dataAccess.GetUserCookies(username));

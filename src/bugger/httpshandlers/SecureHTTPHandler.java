@@ -6,26 +6,30 @@ import bugger.command.ValidateCookie;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpHandler;
 
-public abstract class SecureHTTPHandler implements HttpHandler
+abstract class SecureHTTPHandler implements HttpHandler
 	{
 	private class CookieData
 		{
 		public String cookieID;
 		public String userID;
 
-		 public CookieData(String cookieID,String userID)
+		 CookieData(String cookieID, String userID)
 			{
 			this.cookieID = cookieID;
 			this.userID = userID;
 			}
 		}
-	private Object List;
 
-	public boolean HasValidCookie(Headers headers)
+	private CookieData requestData;
+
+	 String GetHandlerUserID()
+		{
+		return(requestData.userID);
+		}
+
+	boolean HasValidCookie(Headers headers)
 		{
 		boolean returnValue = false;
-
-		System.out.println("Loorking for cookie . . .");
 		//Iterate through the headers to find our cookie
 
 		java.util.List<String> cookies = headers.get("Cookie");
@@ -35,12 +39,13 @@ public abstract class SecureHTTPHandler implements HttpHandler
 				{
 				if (value.contains(LoginHandler.CookieString))
 					{
-					System.out.println("Found the cookie:" + value);
 					//Get the data from the string list
-					CookieData cookieData = ParseCookies(value);
-					//Check the cookie for validation
-					BuggerCommand<Boolean> validation = BuggerCMD.DoCommand(new ValidateCookie(cookieData.userID, cookieData.cookieID));
-					returnValue = validation.GetReturnValue();
+					returnValue = ParseCookies(value);
+					}
+
+				if(returnValue == true)
+					{
+					break;
 					}
 				}
 			}
@@ -48,20 +53,43 @@ public abstract class SecureHTTPHandler implements HttpHandler
 		return (returnValue);
 		}
 
-	private CookieData ParseCookies(String value)
+	private boolean ParseCookies(String value)
 		{
-		CookieData returnValue = null;
+		System.out.println(" -> Looking through cookies . . .");
+		boolean returnValue = false;
+		int semiColonIndex = 0;
+		String currentCookie = value;
 
-		int equalsIndex = value.indexOf('=');
-		int colonIndex = value.indexOf(':');
-
-		for(int i = 0; i < value.length(); i++)
+		while(semiColonIndex < currentCookie.length())
 			{
-			
-			}
+			int cookieStart = value.indexOf(LoginHandler.CookieString);
 
-		System.out.println(value.substring(equalsIndex,colonIndex));
-		System.out.println(value.substring(colonIndex));
+			currentCookie = value.substring(cookieStart);
+
+			int equalsIndex = currentCookie.indexOf('=');
+			int colonIndex = currentCookie.indexOf(':');
+			semiColonIndex = currentCookie.indexOf(';') - 1;
+
+			if(semiColonIndex <= 0)
+				{
+				semiColonIndex = currentCookie.length();
+				}
+
+			if(equalsIndex > -1 && colonIndex > -1)
+				{
+				String cookieData = currentCookie.substring(equalsIndex + 1,colonIndex - 1);
+				String userID = currentCookie.substring(colonIndex +  1,semiColonIndex);
+
+				BuggerCommand<Boolean> validation = BuggerCMD.DoCommand(new ValidateCookie(userID, cookieData));
+				returnValue = validation.GetReturnValue();
+
+				if(returnValue == true)
+					{
+					requestData = new CookieData(cookieData,userID);
+					break;
+					}
+				}
+			}
 
 		return returnValue;
 		}

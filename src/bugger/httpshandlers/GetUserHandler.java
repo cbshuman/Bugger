@@ -2,7 +2,8 @@ package bugger.httpshandlers;
 
 import bugger.command.BuggerCMD;
 import bugger.command.BuggerCommand;
-import bugger.command.userCMD.CMD_GetUserByUsername;
+import bugger.command.userCMD.CMD_GetUserByID;
+import bugger.dataModel.clientModel.ClientUser;
 import bugger.dataModel.serverModel.User;
 import bugger.serialization.SerializationInterface;
 import bugger.utility.Utility;
@@ -30,10 +31,11 @@ public class GetUserHandler extends SecureHTTPHandler
 				System.out.println(" -> Got Valid Cookie --");
 
 				//Get the user
-				BuggerCommand<User> userCommand = BuggerCMD.DoCommand(new CMD_GetUserByUsername(GetHandlerUserID()));
+				BuggerCommand<User> userCommand = BuggerCMD.DoCommand(new CMD_GetUserByID(GetHandlerUserID()));
 				User user = userCommand.GetReturnValue();
+
 				//Return the user details
-				returnMessage = SerializationInterface.SerializeUser(user);
+				returnMessage = SerializationInterface.SerializeClientUser(new ClientUser(user));
 				exchange.sendResponseHeaders(HttpURLConnection.HTTP_CREATED, returnMessage.length());
 				//TODO: Remove debugging statements
 				System.out.println(" -> Sent User Information  --");

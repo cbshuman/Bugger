@@ -17,7 +17,7 @@ public class CMD_GetUserByID extends CMD_GetUser
 		{
 		if(!commandSuccessful)
 			{
-			commandSuccessful = GetUser(User.param_userID,username);
+			commandSuccessful = GetUser(username,User.param_userID);
 			}
 		}
 	}

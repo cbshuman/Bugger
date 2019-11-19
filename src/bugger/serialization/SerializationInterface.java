@@ -1,5 +1,6 @@
 package bugger.serialization;
 
+import bugger.dataModel.clientModel.ClientUser;
 import bugger.dataModel.serverModel.User;
 
 public class SerializationInterface
@@ -24,6 +25,11 @@ public class SerializationInterface
 		}
 
 	public static String SerializeUser(User user)
+		{
+		return(serializer.SerializeUser(user));
+		}
+
+	public static String SerializeClientUser(ClientUser user)
 		{
 		return(serializer.SerializeUser(user));
 		}

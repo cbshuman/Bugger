@@ -18,7 +18,7 @@ public class Cookie extends DataModel
 
 	public String cookieID;
 	public String userID;
-	public String timestamp;
+	private String timestamp;
 
 	public Cookie(String cookieID, String userID, String timestamp)
 		{
@@ -52,7 +52,7 @@ public class Cookie extends DataModel
 			DateFormat dateFormat = new SimpleDateFormat(timeFormat);
 			long cookieTimestamp = dateFormat.parse(timestamp).getTime();
 
-			System.out.println(cookieTimestamp + "/" + date.getTime() + "/" + cookieExpirationTime);
+			//System.out.println(cookieTimestamp + "/" + date.getTime() + "/" + cookieExpirationTime);
 
 			//Return whether the distance is valid
 			return(Math.abs(date.getTime() - cookieTimestamp) < cookieExpirationTime);

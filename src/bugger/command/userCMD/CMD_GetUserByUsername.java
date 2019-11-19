@@ -16,7 +16,7 @@ public class CMD_GetUserByUsername extends CMD_GetUser
 		{
 		if(!commandSuccessful)
 			{
-			commandSuccessful = GetUser(User.param_username,username);
+			commandSuccessful = GetUser(username,User.param_username);
 			}
 		}
 	}

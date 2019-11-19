@@ -11,9 +11,11 @@ public abstract class CMD_GetUser extends BuggerCommand<User>
 	{
 	protected User user;
 
-	protected boolean GetUser(String parameter, String value)
+	boolean GetUser(String value,String parameter)
 		{
 		user = DataProxy.GetUserByParameter(value,parameter);
+
+		//System.out.println(" -> Found this: " + user + " - Parameter: '" + parameter + "' Value: '" + value + "'");
 
 		if(user != null)
 			{

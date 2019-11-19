@@ -1,5 +1,6 @@
 package bugger.serialization;
 
+import bugger.dataModel.clientModel.ClientUser;
 import bugger.dataModel.serverModel.Cookie;
 import bugger.dataModel.serverModel.User;
 import com.google.gson.Gson;
@@ -29,5 +30,11 @@ public class JSONSerializer implements ISerializer
 	public String SerializeCookie(Cookie cookieIn)
 		{
 		return SerializeObject(cookieIn);
+		}
+
+	@Override
+	public String SerializeUser(ClientUser user)
+		{
+		return SerializeObject(user);
 		}
 	}

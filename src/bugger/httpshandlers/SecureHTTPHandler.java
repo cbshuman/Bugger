@@ -77,7 +77,8 @@ abstract class SecureHTTPHandler implements HttpHandler
 
 			if(equalsIndex > -1 && colonIndex > -1)
 				{
-				String cookieData = currentCookie.substring(equalsIndex + 1,colonIndex - 1);
+				//System.out.println(currentCookie);
+				String cookieData = currentCookie.substring(equalsIndex + 1,colonIndex);
 				String userID = currentCookie.substring(colonIndex +  1,semiColonIndex);
 
 				BuggerCommand<Boolean> validation = BuggerCMD.DoCommand(new CMD_ValidateCookie(userID, cookieData));

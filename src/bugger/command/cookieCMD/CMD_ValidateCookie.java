@@ -23,6 +23,8 @@ public class CMD_ValidateCookie extends BuggerCommand<Boolean>
 
 		for (Cookie cookie : cookies)
 			{
+			//System.out.println(" -> '" + cookieID + "' ? '" + cookie.cookieID + "'");
+			//System.out.println(" -> " + cookieID.equals(cookie.cookieID) + " / " + cookie.HasValidTimeStamp());
 			if (cookie.HasValidTimeStamp() && cookieID.equals(cookie.cookieID))
 				{
 				returnValue = true;

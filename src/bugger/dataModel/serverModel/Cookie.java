@@ -41,6 +41,9 @@ public class Cookie extends DataModel
 		return(dateFormat.format(date));
 		}
 
+	/*
+	Checks that our cookies have a valid timestamp and haven't expired
+	 */
 	public boolean HasValidTimeStamp()
 		{
 		try
@@ -49,8 +52,10 @@ public class Cookie extends DataModel
 			DateFormat dateFormat = new SimpleDateFormat(timeFormat);
 			long cookieTimestamp = dateFormat.parse(timestamp).getTime();
 
+			System.out.println(cookieTimestamp + "/" + date.getTime() + "/" + cookieExpirationTime);
+
 			//Return whether the distance is valid
-			return((cookieTimestamp - date.getTime()) < cookieExpirationTime);
+			return(Math.abs(date.getTime() - cookieTimestamp) < cookieExpirationTime);
 			}
 		catch (ParseException p)
 			{

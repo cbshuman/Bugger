@@ -1,13 +1,10 @@
 package bugger.command.userCMD;
 
-import bugger.command.BuggerCommand;
-import bugger.dataAccessInterface.DataProxy;
 import bugger.dataModel.serverModel.User;
 
-public class CMD_GetUserByUsername extends BuggerCommand<User>
+public class CMD_GetUserByUsername extends CMD_GetUser
 	{
 	private String username;
-	private User user = null;
 
 	public CMD_GetUserByUsername(String username)
 		{
@@ -19,14 +16,7 @@ public class CMD_GetUserByUsername extends BuggerCommand<User>
 		{
 		if(!commandSuccessful)
 			{
-			user = DataProxy.GetUserByParameter(username, User.param_username);
-			commandSuccessful = (user != null);
+			commandSuccessful = GetUser(User.param_username,username);
 			}
-		}
-
-	@Override
-	public User GetReturnValue()
-		{
-		return user;
 		}
 	}

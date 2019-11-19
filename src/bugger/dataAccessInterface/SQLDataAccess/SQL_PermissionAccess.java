@@ -2,6 +2,7 @@ package bugger.dataAccessInterface.SQLDataAccess;
 
 import bugger.dataAccessInterface.dao.IpermissionAccess;
 import bugger.dataModel.serverModel.Permission;
+import bugger.dataModel.serverModel.User;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -67,7 +68,7 @@ public class SQL_PermissionAccess extends SQL_DAO<Permission> implements Ipermis
 			Statement statement = connect.createStatement();
 
 			//Get the permissions
-			ResultSet result = statement.executeQuery("SELECT * FROM UserPermission WHERE userID = " + userID );
+			ResultSet result = statement.executeQuery("SELECT * FROM " + SQL_DataAccess.table_user_permission + " WHERE " + User.param_userID + " = '" + userID + "'");
 
 			while(result.next())
 				{
@@ -80,6 +81,7 @@ public class SQL_PermissionAccess extends SQL_DAO<Permission> implements Ipermis
 		catch (Exception e)
 			{
 			System.out.println(e.getMessage());
+			e.printStackTrace();
 			}
 
 		return returnValue;

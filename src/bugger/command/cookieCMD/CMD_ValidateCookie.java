@@ -1,17 +1,19 @@
-package bugger.command;
+package bugger.command.cookieCMD;
 
+import bugger.command.BuggerCommand;
 import bugger.dataAccessInterface.DataProxy;
 import bugger.dataModel.serverModel.Cookie;
 
-public class ValidateCookie extends BuggerCommand<Boolean>
+public class CMD_ValidateCookie extends BuggerCommand<Boolean>
 	{
 	private String username;
 	private String cookieID;
 	private boolean returnValue = false;
 
-	public ValidateCookie(String username, String cookieID)
+	public CMD_ValidateCookie(String username, String cookieID)
 		{
 		this.username = username;
+		this.cookieID = cookieID;
 		}
 
 	@Override
@@ -21,21 +23,17 @@ public class ValidateCookie extends BuggerCommand<Boolean>
 
 		for (Cookie cookie : cookies)
 			{
-			if (cookie.HasValidTimeStamp())
+			if (cookie.HasValidTimeStamp() && cookieID.equals(cookie.cookieID))
 				{
 				returnValue = true;
 				}
-			else
+			else if(cookieID.equals(cookie.cookieID))
 				{
 				DataProxy.DeleteCookie(cookie.cookieID);
 				}
 			}
-		}
 
-	@Override
-	public Boolean CommandSuccessful()
-		{
-		return returnValue;
+		commandSuccessful = returnValue;
 		}
 
 	@Override

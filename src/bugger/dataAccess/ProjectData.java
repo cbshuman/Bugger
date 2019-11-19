@@ -1,5 +1,6 @@
 package bugger.dataAccess;
 
+import bugger.dataAccessInterface.DataProxy;
 import bugger.dataModel.serverModel.Permission;
 import bugger.dataModel.serverModel.Project;
 
@@ -141,12 +142,12 @@ public class ProjectData
 		return(returnValue);
 		}
 
-	public static boolean AddProjectPermission(String projectName,String permissionName)
+	public static boolean AddProjectPermission(String projectName,String permisionID)
 		{
 		boolean returnValue = false;
 		//Load the user and permission
 		Project targetProject = GetProjectByParameter(projectName, "projectID");
-		Permission targetPermission = PermissionData.GetByName(permissionName);
+		Permission targetPermission = DataProxy.GetPermission(permisionID,"permissionName");
 
 		if(targetProject != null || targetPermission != null)
 			{

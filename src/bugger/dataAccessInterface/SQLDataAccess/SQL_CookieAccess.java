@@ -1,6 +1,6 @@
 package bugger.dataAccessInterface.SQLDataAccess;
 
-import bugger.dataAccessInterface.IcookieAccess;
+import bugger.dataAccessInterface.dao.IcookieAccess;
 import bugger.dataModel.serverModel.Cookie;
 
 import java.sql.Connection;
@@ -19,7 +19,7 @@ public class SQL_CookieAccess implements IcookieAccess
 
 		try
 			{
-			Connection connect = SQLDataAccess.GetDatabaseConnection();
+			Connection connect = SQL_DataAccess.GetDatabaseConnection();
 			Statement statement = connect.createStatement();
 			statement.executeUpdate("INSERT INTO Cookies(cookieID,userID,timestamp) VALUES ('"
 					+ cookieID + "','"
@@ -44,7 +44,7 @@ public class SQL_CookieAccess implements IcookieAccess
 
 		try
 			{
-			Connection connect = SQLDataAccess.GetDatabaseConnection();
+			Connection connect = SQL_DataAccess.GetDatabaseConnection();
 
 			Statement statement = connect.createStatement();
 			ResultSet result = statement.executeQuery("SELECT * FROM Cookies WHERE userID = '" + userID + "'" );
@@ -75,7 +75,7 @@ public class SQL_CookieAccess implements IcookieAccess
 		boolean returnValue = false;
 		try
 			{
-			Connection connect = SQLDataAccess.GetDatabaseConnection();
+			Connection connect = SQL_DataAccess.GetDatabaseConnection();
 			Statement statement = connect.createStatement();
 
 			statement.executeUpdate(" DELETE FROM Cookies WHERE cookieID = '" + cookieID + "'");

@@ -1,10 +1,20 @@
 package bugger.dataModel.serverModel;
 
-import bugger.dataAccess.DataAccess;
 import bugger.dataModel.DataModel;
+
+import java.util.List;
 
 public class User extends DataModel
 	{
+	public static final String param_userID = "userID";
+	public static final String param_username = "username";
+	public static final String param_email = "email";
+	public static final String param_hashedPassword = "password";
+	public static final String param_alias = "alias";
+	public static final String param_firstName = "firstName";
+	public static final String param_lastName = "lastName";
+	public static final String param_enabled = "enabled";
+
 	public String userID;
 	public String username;
 	public String email;
@@ -84,7 +94,7 @@ public class User extends DataModel
 	public static String GenerateUserID(String firstName,String lastName)
 		{
 		StringBuilder returnValue = new StringBuilder();
-		int number = DataAccess.GetLastID("lastUserID");
+		int number = 0;
 
 		returnValue.append(firstName.charAt(0));
 		returnValue.append(lastName.charAt(0));
@@ -97,5 +107,11 @@ public class User extends DataModel
 			}
 
 		return(returnValue.toString());
+		}
+
+	public void SetPermissions(List<Permission> permissionList)
+		{
+		permissions = new Permission[permissionList.size()];
+		permissionList.toArray(permissions);
 		}
 	}

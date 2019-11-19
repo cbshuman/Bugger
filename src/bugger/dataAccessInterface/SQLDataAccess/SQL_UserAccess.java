@@ -1,6 +1,6 @@
 package bugger.dataAccessInterface.SQLDataAccess;
 
-import bugger.dataAccessInterface.IuserAccess;
+import bugger.dataAccessInterface.dao.IuserAccess;
 import bugger.dataModel.serverModel.Password;
 import bugger.dataModel.serverModel.User;
 
@@ -10,6 +10,14 @@ import java.sql.Statement;
 
 public class SQL_UserAccess implements IuserAccess
     {
+	public final String col_userID = "userID";
+	public final String col_username = "username";
+	public final String col_email = "email";
+	public final String col_hashedPassword = "password";
+	public final String col_alias = "alias";
+	public final String col_firstName = "firstName";
+	public final String col_lastName = "lastName";
+	public final String col_enabled = "enabled";
 
 	@Override
 	public User[] GetAllUsers()
@@ -43,21 +51,21 @@ public class SQL_UserAccess implements IuserAccess
 
 		try
 			{
-			Connection connect = SQLDataAccess.GetDatabaseConnection();
+			Connection connect = SQL_DataAccess.GetDatabaseConnection();
 			Statement statement = connect.createStatement();
 			ResultSet result = statement.executeQuery("SELECT * FROM User WHERE " + parameter + " = '"+ query +"'" );
 
 			//Check that we have a result
 			if(result.next())
 				{
-				String userID = result.getString("userID");
-				String username = result.getString("username");
-				String email = result.getString("email");
-				String hashedPassword = result.getString("password");
-				String alias = result.getString("alias");
-				String firstName = result.getString("firstName");
-				String lastName = result.getString("lastName");
-				boolean enabled = result.getBoolean("enabled");
+				String userID = result.getString(User.param_userID);
+				String username = result.getString(User.param_username);
+				String email = result.getString(User.param_email);
+				String hashedPassword = result.getString(User.param_hashedPassword);
+				String alias = result.getString(User.param_alias);
+				String firstName = result.getString(User.param_firstName);
+				String lastName = result.getString(User.param_lastName);
+				boolean enabled = result.getBoolean(User.param_enabled);
 
 				if(username != null && email != null && hashedPassword != null && firstName != null && lastName != null)
 					{
@@ -65,10 +73,8 @@ public class SQL_UserAccess implements IuserAccess
 					returnValue = new User(userID,username,email,password,alias,firstName,lastName,enabled);
 					}
 				}
-			else
-				{
-				System.out.println("Cannot find user with " + parameter + " equaling: " + query);
-				}
+			//user.SetPermissions(DataProxy.GetPermissionList(user.username));
+
 			//Close our connection to the database
 			connect.close();
 			}
@@ -85,10 +91,18 @@ public class SQL_UserAccess implements IuserAccess
         {
         try
             {
-            Connection connect = SQLDataAccess.GetDatabaseConnection();
+            Connection connect = SQL_DataAccess.GetDatabaseConnection();
 
 		    Statement statement = connect.createStatement();
-		    statement.executeUpdate("INSERT INTO User(userID,username,email,password,alias,firstName,lastName) VALUES ('"
+		    statement.executeUpdate("INSERT INTO User("
+									+ User.param_userID + ","
+									+ User.param_username + ","
+									+ User.param_email + ","
+									+ User.param_hashedPassword + ","
+									+ User.param_alias + ","
+									+ User.param_firstName + ","
+									+ User.param_lastName
+									+ ") VALUES ('"
 								    + targetUser.userID + "','"
 								    + targetUser.username + "','"
 								    + targetUser.email + "','"
@@ -128,7 +142,7 @@ public class SQL_UserAccess implements IuserAccess
 
 		try
 			{
-			Connection connect = SQLDataAccess.GetDatabaseConnection();
+			Connection connect = SQL_DataAccess.GetDatabaseConnection();
 			Statement statement = connect.createStatement();
 			ResultSet result = statement.executeQuery("SELECT * FROM User WHERE USERNAME = '" + username + "'" );
 

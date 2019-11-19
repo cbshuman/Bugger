@@ -1,6 +1,7 @@
 package bugger.dataAccessInterface.SQLDataAccess;
 
 import bugger.dataAccessInterface.DataAccess;
+import bugger.dataModel.serverModel.Permission;
 import bugger.dataModel.serverModel.User;
 
 import java.sql.Connection;
@@ -8,17 +9,18 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class SQLDataAccess extends DataAccess
+public class SQL_DataAccess extends DataAccess
     {
 	//Will also make these customizable later
 	public static final String databaseUserName = "bugger";
 	public static final String databasePassword = "letmein2c01_";
 	public static final String databaseConnection = "jdbc:mysql://localhost/bugger?user="+databaseUserName+"&password="+databasePassword+"&serverTimezone=UTC&useSSL=false";
 
-    public SQLDataAccess()
+    public SQL_DataAccess()
         {
         userAccess = new SQL_UserAccess();
         cookieAccess = new SQL_CookieAccess();
+		permissionAccess = new SQL_PermissionAccess();
         }
 
     public static Connection GetDatabaseConnection() throws SQLException
@@ -45,14 +47,14 @@ public class SQLDataAccess extends DataAccess
 
 		    //Create user table
 		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS User("
-								    + "userID VARCHAR(255) NOT NULL PRIMARY KEY,"
-								    + "username VARCHAR(255) NOT NULL,"
-								    + "email VARCHAR(255) NOT NULL,"
-								    + "password TEXT NOT NULL," 
-								    + "alias VARCHAR(255),"
-								    + "firstName VARCHAR(255) NOT NULL,"
-								    + "lastName VARCHAR(255) NOT NULL,"
-								    + "enabled BOOLEAN DEFAULT true)");
+								    + User.param_userID + " VARCHAR(255) NOT NULL PRIMARY KEY,"
+								    + User.param_username + " VARCHAR(255) NOT NULL,"
+								    + User.param_email + " VARCHAR(255) NOT NULL,"
+								    + User.param_hashedPassword + " TEXT NOT NULL,"
+								    + User.param_alias + " VARCHAR(255),"
+								    + User.param_firstName + " VARCHAR(255) NOT NULL,"
+								    + User.param_lastName + " VARCHAR(255) NOT NULL,"
+								    + User.param_enabled + " BOOLEAN DEFAULT true)");
 
 		    //Create a Table to store user cookies
 		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS Cookies("
@@ -63,9 +65,9 @@ public class SQLDataAccess extends DataAccess
 
 		    //Create a table to store Permission groups
 		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS Permission("
-								    + "permissionID VARCHAR(255) NOT NULL PRIMARY KEY,"
-								    + "permissionName VARCHAR(255) NOT NULL,"
-								    + "discription TEXT)");
+								    + Permission.param_permissionID + " VARCHAR(255) NOT NULL PRIMARY KEY,"
+								    + Permission.param_permissionName + " VARCHAR(255) NOT NULL,"
+								    + Permission.param_discription + " TEXT)");
 
 		    //Create a Table to store Project Information
 		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS Project("
@@ -86,17 +88,6 @@ public class SQLDataAccess extends DataAccess
 								    + "projectID VARCHAR(255) NOT NULL,"
 								    + "FOREIGN KEY (permissionID) REFERENCES Permission(permissionID),"
 								    + "FOREIGN KEY (projectID) REFERENCES Project(projectID))");
-
-		    //Check that an admin exists in the table
-
-			if(!userAccess.GetUserExisits("admin"))
-				{
-				System.out.println("\n --- Cannot find administrator account, creating it now . . .");
-
-				boolean created = userAccess.CreateUser(new User("admin","admin","","admin","admin","sudo", "su",true));
-
-				System.out.println("Admin Creation Success: " + created + "\n");
-				}
 
             //Close the database connection
             connect.close();

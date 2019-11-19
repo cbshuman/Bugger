@@ -4,7 +4,7 @@ public abstract class BuggerCommand<T>
 	{
 	protected boolean commandSuccessful = false;
 
-	Boolean CommandSuccessful()
+	public boolean CommandSuccessful()
 		{
 		return(commandSuccessful);
 		}

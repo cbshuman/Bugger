@@ -1,14 +1,15 @@
-package bugger.command;
+package bugger.command.cookieCMD;
 
+import bugger.command.BuggerCommand;
 import bugger.dataAccessInterface.DataProxy;
 import bugger.dataModel.serverModel.Cookie;
 
-public class CreateCookie extends BuggerCommand<Cookie>
+public class CMD_CreateCookie extends BuggerCommand<Cookie>
 	{
 	private String userName;
 	private Cookie returnValue;
 
-	public CreateCookie(String userName)
+	public CMD_CreateCookie(String userName)
 		{
 		this.userName = userName;
 		}

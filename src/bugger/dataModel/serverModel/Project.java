@@ -1,6 +1,5 @@
 package bugger.dataModel.serverModel;
 
-import bugger.dataAccess.DataAccess;
 import bugger.dataAccess.ProjectData;
 
 public class Project
@@ -20,7 +19,7 @@ public class Project
 	public static String GenerateProjecID(String projectName)
 		{
 		StringBuilder returnValue = new StringBuilder();
-		int number = DataAccess.GetLastID("lastProjectID");
+		int number = 0;
 
 		returnValue.append(projectName.charAt(0));
 		returnValue.append("_");

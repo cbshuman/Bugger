@@ -1,4 +1,4 @@
-package bugger.dataAccessInterface;
+package bugger.dataAccessInterface.dao;
 
 import bugger.dataModel.serverModel.User;
 

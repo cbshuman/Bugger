@@ -1,12 +1,19 @@
 package bugger.dataAccessInterface;
 
+import bugger.dataAccessInterface.dao.IcookieAccess;
+import bugger.dataAccessInterface.dao.IpermissionAccess;
+import bugger.dataAccessInterface.dao.IuserAccess;
 import bugger.dataModel.serverModel.Cookie;
+import bugger.dataModel.serverModel.Permission;
 import bugger.dataModel.serverModel.User;
+
+import java.util.List;
 
 public abstract class DataAccess
     {
     protected IuserAccess userAccess;
     protected IcookieAccess cookieAccess;
+    protected IpermissionAccess permissionAccess;
 
     public boolean CreateUser(User targetUser)
         {
@@ -46,14 +53,31 @@ public abstract class DataAccess
         return(cookieAccess.GetUserCookies(username));
         }
 
+    public Cookie CreateNewCookie(String username)
+        {
+        return(cookieAccess.CreateNewCookie(username));
+        }
+
     public boolean DeleteCookie(String cookieID)
         {
         return(cookieAccess.DeleteCookie(cookieID));
         }
 
-    public Cookie CreateNewCookie(String username)
+    //------------ Permissions --------------- \\
+
+    public boolean CreateNewPermission(Permission permission)
         {
-        return(cookieAccess.CreateNewCookie(username));
+        return(permissionAccess.CreatePermission(permission));
+        }
+
+    public List<Permission> GetPermissionList(String userID)
+        {
+        return(permissionAccess.GetPermissionList(userID));
+        }
+
+    public Permission GetPermission(String permissionID,String parameter)
+        {
+        return(permissionAccess.GetPermissionByParameter(permissionID, parameter));
         }
 
     public abstract void ValidateDatabase();

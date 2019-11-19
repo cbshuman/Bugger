@@ -1,6 +1,6 @@
 package bugger.httpshandlers;
 
-import bugger.dataAccess.PermissionData;
+import bugger.dataAccessInterface.DataProxy;
 import bugger.dataModel.serverModel.Permission;
 import bugger.dataModel.serverModel.User;
 import bugger.utility.HandlerUtilites;
@@ -12,6 +12,7 @@ import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.util.List;
 
 public class PermissionHandler extends SecureHTTPHandler
 	{
@@ -83,7 +84,7 @@ public class PermissionHandler extends SecureHTTPHandler
 	private String CreatePermission(HttpExchange exchange, PermissionJSON data) throws IOException
 		{
 		String returnMessage = "";
-		if(PermissionData.GetByName(data.permissionName) != null)
+		if(DataProxy.GetPermission(data.permissionName,"permissionName") != null)
 			{
 			System.out.println(" -> " + data.permissionName + " already exists!");
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
@@ -91,7 +92,7 @@ public class PermissionHandler extends SecureHTTPHandler
 			}
 		else
 			{
-			PermissionData.CreateNewPermission(data.permissionName,data.permissionDisc);
+			DataProxy.CreateNewPermission(new Permission(data.permissionName,data.permissionDisc));
 			returnMessage = "Security group created!";
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_CREATED, 0);
 			}
@@ -110,7 +111,11 @@ public class PermissionHandler extends SecureHTTPHandler
 		System.out.println(" -> Authenticating Cookie: " + cookieContents);
 		if(HasValidCookie(headers))
 			{
-			Permission[] permissions = PermissionData.GetPermissions();
+			List<Permission> permissionList = DataProxy.GetPermissionList(GetHandlerUserID());
+
+			Permission[] permissions = new Permission[permissionList.size()];
+			permissionList.toArray(permissions);
+
 			PermissionJSON[] jsonResponce = new PermissionJSON[permissions.length];
 
 			for(int i = 0; i < permissions.length; i++)
@@ -153,15 +158,7 @@ public class PermissionHandler extends SecureHTTPHandler
 
 			if(user.HasPermission("admin") == true)
 				{
-				System.out.println(" -> Authenticated! Attempting to remove permission!");
-				if(PermissionData.DeleteByName(permissionName))
-					{
-					exchange.sendResponseHeaders(HttpURLConnection.HTTP_ACCEPTED, 0);
-					}
-				else
-					{
-					exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-					}
+
 				//End of verify cookie if
 				}
 			else

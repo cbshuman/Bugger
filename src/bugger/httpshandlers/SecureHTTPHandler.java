@@ -2,7 +2,7 @@ package bugger.httpshandlers;
 
 import bugger.command.BuggerCMD;
 import bugger.command.BuggerCommand;
-import bugger.command.ValidateCookie;
+import bugger.command.cookieCMD.CMD_ValidateCookie;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -80,7 +80,7 @@ abstract class SecureHTTPHandler implements HttpHandler
 				String cookieData = currentCookie.substring(equalsIndex + 1,colonIndex - 1);
 				String userID = currentCookie.substring(colonIndex +  1,semiColonIndex);
 
-				BuggerCommand<Boolean> validation = BuggerCMD.DoCommand(new ValidateCookie(userID, cookieData));
+				BuggerCommand<Boolean> validation = BuggerCMD.DoCommand(new CMD_ValidateCookie(userID, cookieData));
 				returnValue = validation.GetReturnValue();
 
 				if(returnValue == true)

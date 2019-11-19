@@ -2,8 +2,8 @@ package bugger.httpshandlers;
 
 import bugger.command.BuggerCMD;
 import bugger.command.BuggerCommand;
-import bugger.command.CMD_GetUserByUsername;
-import bugger.command.CreateCookie;
+import bugger.command.cookieCMD.CMD_CreateCookie;
+import bugger.command.userCMD.CMD_GetUserByUsername;
 import bugger.dataModel.clientModel.ClientUser;
 import bugger.dataModel.serverModel.Cookie;
 import bugger.dataModel.serverModel.User;
@@ -37,7 +37,7 @@ public class LoginHandler implements HttpHandler
 
 			if(user != null)
 				{
-				loginSuccess = user.CompareUnhashedPassword(login.password);
+				loginSuccess = user.CompareUnhashedPassword(login.password) && user.enabled;
 				//System.out.println("Password Comparision: " + loginSuccess);
 				}
 
@@ -46,7 +46,7 @@ public class LoginHandler implements HttpHandler
 				System.out.println(" --> Correct Credentials - Packaging response. . .");
 
 				//Create a cookie for their session
-				BuggerCommand<Cookie> cookieCMD = BuggerCMD.DoCommand(new CreateCookie(user.userID));
+				BuggerCommand<Cookie> cookieCMD = BuggerCMD.DoCommand(new CMD_CreateCookie(user.userID));
 				Cookie cookie = cookieCMD.GetReturnValue();
 
 				exchange.getResponseHeaders().add("Set-Cookie", CookieString + " = " + cookie.cookieID + ":" + cookie.userID + "; Path=/; Max-Age= 86400;");
@@ -70,7 +70,15 @@ public class LoginHandler implements HttpHandler
 			else
 				{
 				System.out.println("-- Login Failed -- \n");
-				returnMessage = "{message : Invalid username/password combination!}";
+
+				if(user.enabled)
+					{
+					returnMessage = "{message : Invalid username/password combination!}";
+					}
+				else
+					{
+					returnMessage = "{message : Account has been disabled! Please contact your systems administrator!}";
+					}
 
 				exchange.sendResponseHeaders(HttpURLConnection.HTTP_UNAUTHORIZED, returnMessage.length());
 				}

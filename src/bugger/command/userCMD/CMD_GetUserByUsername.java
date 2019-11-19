@@ -1,17 +1,17 @@
-package bugger.command;
+package bugger.command.userCMD;
 
+import bugger.command.BuggerCommand;
 import bugger.dataAccessInterface.DataProxy;
 import bugger.dataModel.serverModel.User;
 
 public class CMD_GetUserByUsername extends BuggerCommand<User>
 	{
 	private String username;
-	private User user;
+	private User user = null;
 
 	public CMD_GetUserByUsername(String username)
 		{
 		this.username = username;
-		user = null;
 		}
 
 	@Override
@@ -19,8 +19,8 @@ public class CMD_GetUserByUsername extends BuggerCommand<User>
 		{
 		if(!commandSuccessful)
 			{
-			user = DataProxy.GetUserByParameter(username, "username");
-			commandSuccessful = true;
+			user = DataProxy.GetUserByParameter(username, User.param_username);
+			commandSuccessful = (user != null);
 			}
 		}
 

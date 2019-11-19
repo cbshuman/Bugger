@@ -2,7 +2,7 @@ package bugger.httpshandlers;
 
 import bugger.command.BuggerCMD;
 import bugger.command.BuggerCommand;
-import bugger.command.CMD_GetUserByUsername;
+import bugger.command.userCMD.CMD_GetUserByUsername;
 import bugger.dataModel.serverModel.User;
 import bugger.serialization.SerializationInterface;
 import bugger.utility.Utility;

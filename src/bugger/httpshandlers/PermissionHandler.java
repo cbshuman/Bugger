@@ -1,9 +1,11 @@
 package bugger.httpshandlers;
 
+import bugger.command.BuggerCMD;
+import bugger.command.BuggerCommand;
+import bugger.command.userCMD.CMD_GetUserByID;
 import bugger.dataAccessInterface.DataProxy;
 import bugger.dataModel.serverModel.Permission;
 import bugger.dataModel.serverModel.User;
-import bugger.utility.HandlerUtilites;
 import bugger.utility.Utility;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
@@ -39,14 +41,13 @@ public class PermissionHandler extends SecureHTTPHandler
 		String returnMessage = "";
 		Headers headers = exchange.getRequestHeaders();
 
-		String cookieContents = HandlerUtilites.GetCookieIDFromCookie(headers);
-
-		System.out.println(" -> Authenticating Cookie: " + cookieContents);
+		System.out.println(" -> Authenticating Cookie: " );
 		if(HasValidCookie(headers))
 			{
 			PermissionJSON permission = new Gson().fromJson(Utility.InputStreamToString(exchange.getRequestBody()), PermissionJSON.class);
 
-			User user = HandlerUtilites.GetUserFromCookie(cookieContents);
+			BuggerCommand<User> userRequest = BuggerCMD.DoCommand(new CMD_GetUserByID(GetHandlerUserID()));
+			User user = userRequest.GetReturnValue();
 
 			if(user.HasPermission("admin") == true)
 				{
@@ -106,9 +107,7 @@ public class PermissionHandler extends SecureHTTPHandler
 		String returnMessage = "";
 		Headers headers = exchange.getRequestHeaders();
 
-		String cookieContents = HandlerUtilites.GetCookieIDFromCookie(headers);
-
-		System.out.println(" -> Authenticating Cookie: " + cookieContents);
+		System.out.println(" -> Authenticating Cookie: ");
 		if(HasValidCookie(headers))
 			{
 			List<Permission> permissionList = DataProxy.GetPermissionList(GetHandlerUserID());
@@ -146,15 +145,14 @@ public class PermissionHandler extends SecureHTTPHandler
 		String returnMessage = "";
 		Headers headers = exchange.getRequestHeaders();
 
-		String cookieContents = HandlerUtilites.GetCookieIDFromCookie(headers);
-
-		System.out.println(" -> Authenticating Cookie: " + cookieContents);
+		System.out.println(" -> Authenticating Cookie: " );
 		if(HasValidCookie(headers))
 			{
 			String permissionName = exchange.getRequestURI().getPath().substring(17);
 			System.out.println(" -> Target Permission: " + permissionName);
 
-			User user = HandlerUtilites.GetUserFromCookie(cookieContents);
+			BuggerCommand<User> userRequest = BuggerCMD.DoCommand(new CMD_GetUserByID(GetHandlerUserID()));
+			User user = userRequest.GetReturnValue();
 
 			if(user.HasPermission("admin") == true)
 				{

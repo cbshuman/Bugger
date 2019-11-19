@@ -22,7 +22,7 @@ abstract class SecureHTTPHandler implements HttpHandler
 
 	private CookieData requestData;
 
-	 String GetHandlerUserID()
+	String GetHandlerUserID()
 		{
 		return(requestData.userID);
 		}

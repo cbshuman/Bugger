@@ -2,7 +2,6 @@ package bugger.httpshandlers;
 
 import bugger.dataAccess.ProjectData;
 import bugger.dataModel.serverModel.Project;
-import bugger.utility.HandlerUtilites;
 import bugger.utility.Utility;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
@@ -33,9 +32,7 @@ public class ProjectHandler extends SecureHTTPHandler
 		String returnMessage = "";
 		Headers headers = exchange.getRequestHeaders();
 
-		String cookieContents = HandlerUtilites.GetCookieIDFromCookie(headers);
-
-		System.out.println(" -> Authenticating Cookie: " + cookieContents);
+		System.out.println(" -> Authenticating Cookie: ");
 		if(HasValidCookie(headers))
 			{
 			System.out.println(" -> Creating Project");
@@ -71,9 +68,7 @@ public class ProjectHandler extends SecureHTTPHandler
 		String returnMessage = "";
 		Headers headers = exchange.getRequestHeaders();
 
-		String cookieContents = HandlerUtilites.GetCookieIDFromCookie(headers);
-
-		System.out.println(" -> Authenticating Cookie: " + cookieContents);
+		System.out.println(" -> Authenticating Cookie: ");
 		if(HasValidCookie(headers))
 			{
 			Project[] projects = ProjectData.GetProjects();

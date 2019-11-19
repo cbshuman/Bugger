@@ -3,7 +3,6 @@ package bugger.httpshandlers;
 import bugger.dataAccessInterface.DataProxy;
 import bugger.dataModel.clientModel.ClientUser;
 import bugger.dataModel.serverModel.User;
-import bugger.utility.HandlerUtilites;
 import bugger.utility.Utility;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
@@ -34,9 +33,7 @@ public class GetAllUsersHandler extends SecureHTTPHandler
 		String returnMessage = "";
 		Headers headers = exchange.getRequestHeaders();
 
-		String cookieContents = HandlerUtilites.GetCookieIDFromCookie(headers);
-
-		System.out.println(" -> Authenticating Cookie: " + cookieContents);
+		System.out.println(" -> Authenticating Cookie: ");
 		if(HasValidCookie(headers))
 			{
 			User[] users = DataProxy.GetAllUsers();

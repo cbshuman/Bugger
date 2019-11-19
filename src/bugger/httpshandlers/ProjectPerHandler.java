@@ -1,6 +1,5 @@
 package bugger.httpshandlers;
 
-import bugger.utility.HandlerUtilites;
 import bugger.utility.Utility;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -30,9 +29,7 @@ public class ProjectPerHandler extends SecureHTTPHandler
 		String returnMessage = "";
 		Headers headers = exchange.getRequestHeaders();
 
-		String cookieContents = HandlerUtilites.GetCookieIDFromCookie(headers);
-
-		System.out.println(" -> Authenticating Cookie: " + cookieContents);
+		System.out.println(" -> Authenticating Cookie: ");
 		if(HasValidCookie(headers))
 			{
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
@@ -57,9 +54,7 @@ public class ProjectPerHandler extends SecureHTTPHandler
 		String returnMessage = "";
 		Headers headers = exchange.getRequestHeaders();
 
-		String cookieContents = HandlerUtilites.GetCookieIDFromCookie(headers);
-
-		System.out.println(" -> Authenticating Cookie: " + cookieContents);
+		System.out.println(" -> Authenticating Cookie: ");
 		if(HasValidCookie(headers))
 			{
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);

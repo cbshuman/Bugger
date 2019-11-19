@@ -1,4 +1,4 @@
-# Bugger0.4
+# Bugger
 Bugger is an open-source web-based bugtracking program similar to Bugzilla. The main difference is that:
 <ul>
   <li>Bugger is written in Java, making it more accessable to code for</li>

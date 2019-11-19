@@ -6,10 +6,13 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 
 public class Cookie extends DataModel
 	{
+	public final static String param_cookieID = "cookieID";
+	public final static String param_userID = "userID";
+	public final static String param_timestamp = "timestamp";
+
 	public final static String timeFormat = "yyyy-MM-dd HH:mm:ss";
 	public final static long cookieExpirationTime = 24 * 60 * 60 * 1000L;
 
@@ -24,18 +27,9 @@ public class Cookie extends DataModel
 		this.timestamp = timestamp;
 		}
 
-	public static String GenerateCookieID()
+	public static String GenerateCookieID(String userID, String timestamp)
 		{
-		Random rand = new Random(new Date().getTime());
-		StringBuilder returnValue = new StringBuilder();
-
-		while(returnValue.length() < 35)
-			{
-			int number = rand.nextInt();
-			returnValue.append(number);
-			}
-
-		return(returnValue.toString());
+		return(GenerateID(userID,timestamp,0));
 		}
 
 	public static String GetCurrentTimeStamp()

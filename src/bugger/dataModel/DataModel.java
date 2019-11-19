@@ -9,10 +9,10 @@ public class DataModel
 	private static final int prime = 131;
 	private static final int IDlength = 35;
 
-	public static String GenerateID(String stringA, String stringB)
+	public static String GenerateID(String stringA, String stringB, int count)
 		{
 		StringBuilder returnValue = new StringBuilder();
-		int seed = (stringA.charAt(0) + stringB.charAt(0))*prime;
+		int seed = (stringA.charAt(0) + stringB.charAt(0) + count)*prime;
 
 		returnValue.append(stringA.charAt(0));
 		returnValue.append(stringB.charAt(0));

@@ -33,7 +33,7 @@ public abstract class DataAccess
 
     public User GetUserByParameter(String query, String parameter)
         {
-        return(userAccess.GetUserByParameter(query,parameter));
+        return(userAccess.GetByParameter(query,parameter));
         }
 
     public boolean DeleteUser()
@@ -72,12 +72,12 @@ public abstract class DataAccess
 
     public List<Permission> GetPermissionList(String userID)
         {
-        return(permissionAccess.GetPermissionList(userID));
+        return(permissionAccess.GetPermissions(userID));
         }
 
     public Permission GetPermission(String permissionID,String parameter)
         {
-        return(permissionAccess.GetPermissionByParameter(permissionID, parameter));
+        return(permissionAccess.GetByParameter(permissionID, parameter));
         }
 
     public abstract void ValidateDatabase();

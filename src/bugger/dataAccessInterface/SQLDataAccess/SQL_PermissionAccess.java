@@ -5,11 +5,12 @@ import bugger.dataModel.serverModel.Permission;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SQL_PermissionAccess implements IpermissionAccess
+public class SQL_PermissionAccess extends SQL_DAO<Permission> implements IpermissionAccess
 	{
 	@Override
 	public boolean CreatePermission(Permission permission)
@@ -25,7 +26,7 @@ public class SQL_PermissionAccess implements IpermissionAccess
 	@Override
 	public boolean GetPermissionExists(String permissionID)
 		{
-		return (GetPermissionByParameter(permissionID,"permissionID") != null);
+		return (GetByParameter(permissionID,"permissionID") != null);
 		}
 
 	public boolean InsertPermissionIntoTable(Permission permission)
@@ -50,45 +51,13 @@ public class SQL_PermissionAccess implements IpermissionAccess
 		}
 
 	@Override
-	public Permission GetPermissionByParameter(String parameterValue, String parameter)
+	public Permission GetByParameter(String query, String parameter)
 		{
-		Permission returnValue = null;
-
-		if(parameterValue == null)
-			{
-			return null;
-			}
-
-		try
-			{
-			Connection connect = SQL_Connector.GetDatabaseConnection();
-			Statement statement = connect.createStatement();
-			ResultSet result = statement.executeQuery("SELECT * FROM Permission WHERE "+ parameter +" = '"+ parameterValue +"'" );
-
-			//Check that we have a result
-			if(result.next())
-				{
-				//If we find the result, get it put together
-				String permissionName = result.getString("permissionName");
-				String discription = result.getString("discription");
-
-				if(parameterValue != null && permissionName != null && discription != null)
-					{
-					returnValue = new Permission(parameterValue,permissionName,discription);
-					}
-				}
-			connect.close();
-			}
-		catch (Exception e)
-			{
-			System.out.println(e.getMessage());
-			}
-
-		return(returnValue);
+		return(GetByParameter(query,parameter,SQL_DataAccess.table_permission));
 		}
 
 	@Override
-	public List<Permission> GetPermissionList(String userID)
+	public List<Permission> GetPermissions(String userID)
 		{
 		List<Permission> returnValue = new ArrayList<>();
 
@@ -111,6 +80,50 @@ public class SQL_PermissionAccess implements IpermissionAccess
 		catch (Exception e)
 			{
 			System.out.println(e.getMessage());
+			}
+
+		return returnValue;
+		}
+
+	public boolean CheckForValidID(String id)
+		{
+		boolean returnValue = false;
+		try
+			{
+			Connection connect = SQL_DataAccess.GetDatabaseConnection();
+			Statement statement = connect.createStatement();
+			ResultSet result = statement.executeQuery("SELECT * FROM UserPermission WHERE " + Permission.param_permissionID +  " = '" + id + "'" );
+
+			//Check that we have a result - if we do, then the id is taken
+			returnValue = !result.next();
+			connect.close();
+			}
+		catch (Exception e)
+			{
+			System.out.println("Cannot find user! Exception: " + e.getMessage());
+			e.printStackTrace();
+			}
+
+		return (returnValue);
+		}
+
+	@Override
+	protected Permission ParseSQLDataSet(ResultSet resultSet) throws SQLException
+		{
+		Permission returnValue = null;
+
+		//Check that we have a result
+		if(resultSet.next())
+			{
+			//If we find the result, get it put together
+			String permissionID = resultSet.getString(Permission.param_permissionID);
+			String permissionName = resultSet.getString(Permission.param_permissionName);
+			String discription = resultSet.getString(Permission.param_discription);
+
+			if(permissionID != null && permissionName != null && discription != null)
+				{
+				returnValue = new Permission(permissionID,permissionName,discription);
+				}
 			}
 
 		return returnValue;

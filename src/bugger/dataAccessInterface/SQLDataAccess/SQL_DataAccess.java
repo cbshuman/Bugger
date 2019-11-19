@@ -11,6 +11,14 @@ import java.sql.Statement;
 
 public class SQL_DataAccess extends DataAccess
     {
+    //Tables needed for SQL Bugger to work - should be normalized to at least 3rd normal form
+	public static final String table_user = "User";
+	public static final String table_cookies = "Cookies";
+	public static final String table_permission = "Permission";
+	public static final String table_project = "Project";
+	public static final String table_user_permission = "UserPermission";
+	public static final String table_project_permission = "ProjectPermission";
+
 	//Will also make these customizable later
 	public static final String databaseUserName = "bugger";
 	public static final String databasePassword = "letmein2c01_";
@@ -46,7 +54,7 @@ public class SQL_DataAccess extends DataAccess
 								    + "lastBugID int NOT NULL)");
 
 		    //Create user table
-		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS User("
+		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS "+ table_user + "("
 								    + User.param_userID + " VARCHAR(255) NOT NULL PRIMARY KEY,"
 								    + User.param_username + " VARCHAR(255) NOT NULL,"
 								    + User.param_email + " VARCHAR(255) NOT NULL,"
@@ -57,33 +65,33 @@ public class SQL_DataAccess extends DataAccess
 								    + User.param_enabled + " BOOLEAN DEFAULT true)");
 
 		    //Create a Table to store user cookies
-		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS Cookies("
+		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + table_cookies + "("
 								    + "cookieID VARCHAR(255) NOT NULL,"
 								    + "userID VARCHAR(255) NOT NULL,"
 								    + "timestamp DATETIME NOT NULL,"
 								    + "FOREIGN KEY (userID) REFERENCES User(userID))");
 
 		    //Create a table to store Permission groups
-		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS Permission("
+		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + table_permission + "("
 								    + Permission.param_permissionID + " VARCHAR(255) NOT NULL PRIMARY KEY,"
 								    + Permission.param_permissionName + " VARCHAR(255) NOT NULL,"
 								    + Permission.param_discription + " TEXT)");
 
 		    //Create a Table to store Project Information
-		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS Project("
+		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + table_project + "("
 								    + "projectID VARCHAR(255) NOT NULL PRIMARY KEY,"
 								    + "projectName VARCHAR(255) NOT NULL,"
 								    + "discription TEXT)");
 
 		    //Create User Permission Table
-		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS UserPermission("
+		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + table_user_permission + "("
 								    + "permissionID VARCHAR(255) NOT NULL PRIMARY KEY,"
 								    + "userID VARCHAR(255) NOT NULL,"
 								    + "FOREIGN KEY (permissionID) REFERENCES Permission(permissionID),"
 								    + "FOREIGN KEY (userID) REFERENCES User(userID))");
 
 		    //Create User Permission Table
-		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS ProjectPermission("
+		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + table_project_permission + "("
 								    + "permissionID VARCHAR(255) NOT NULL PRIMARY KEY,"
 								    + "projectID VARCHAR(255) NOT NULL,"
 								    + "FOREIGN KEY (permissionID) REFERENCES Permission(permissionID),"

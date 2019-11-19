@@ -6,9 +6,10 @@ import bugger.dataModel.serverModel.User;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
-public class SQL_UserAccess implements IuserAccess
+public class SQL_UserAccess extends SQL_DAO<User> implements IuserAccess
     {
 	public final String col_userID = "userID";
 	public final String col_username = "username";
@@ -39,52 +40,9 @@ public class SQL_UserAccess implements IuserAccess
         }
 
 	@Override
-	public User GetUserByParameter(String query, String parameter)
+	public User GetByParameter(String query, String parameter)
 		{
-		//The user that will be returned, may return null if not found
-		User returnValue = null;
-
-		if(query == null || parameter == null)
-			{
-			return null;
-			}
-
-		try
-			{
-			Connection connect = SQL_DataAccess.GetDatabaseConnection();
-			Statement statement = connect.createStatement();
-			ResultSet result = statement.executeQuery("SELECT * FROM User WHERE " + parameter + " = '"+ query +"'" );
-
-			//Check that we have a result
-			if(result.next())
-				{
-				String userID = result.getString(User.param_userID);
-				String username = result.getString(User.param_username);
-				String email = result.getString(User.param_email);
-				String hashedPassword = result.getString(User.param_hashedPassword);
-				String alias = result.getString(User.param_alias);
-				String firstName = result.getString(User.param_firstName);
-				String lastName = result.getString(User.param_lastName);
-				boolean enabled = result.getBoolean(User.param_enabled);
-
-				if(username != null && email != null && hashedPassword != null && firstName != null && lastName != null)
-					{
-					Password password = new Password(hashedPassword,true);
-					returnValue = new User(userID,username,email,password,alias,firstName,lastName,enabled);
-					}
-				}
-			//user.SetPermissions(DataProxy.GetPermissionList(user.username));
-
-			//Close our connection to the database
-			connect.close();
-			}
-		catch (Exception e)
-			{
-			System.out.println("Exception when looking for user: " + e.getMessage());
-			e.printStackTrace();
-			}
-
-		return(returnValue);
+		return(GetByParameter(query,parameter,SQL_DataAccess.table_user));
 		}
 
 	private boolean InsertUserIntoTable(User targetUser)
@@ -158,4 +116,52 @@ public class SQL_UserAccess implements IuserAccess
 
         return(returnValue);
         }
-    }
+
+	public boolean CheckForValidID(String id)
+		{
+		boolean returnValue = false;
+		try
+			{
+			Connection connect = SQL_DataAccess.GetDatabaseConnection();
+			Statement statement = connect.createStatement();
+			ResultSet result = statement.executeQuery("SELECT * FROM User WHERE " + User.param_userID +  " = '" + id + "'" );
+
+			//Check that we have a result - if we do, then the id is taken
+			returnValue = !result.next();
+			connect.close();
+			}
+		catch (Exception e)
+			{
+			System.out.println("Cannot find user! Exception: " + e.getMessage());
+			e.printStackTrace();
+			}
+
+		return (returnValue);
+		}
+
+	@Override
+	protected User ParseSQLDataSet(ResultSet resultSet) throws SQLException
+		{
+		User returnValue = null;
+
+		//Check that we have a result
+		if(resultSet.next())
+			{
+			String userID = resultSet.getString(User.param_userID);
+			String username = resultSet.getString(User.param_username);
+			String email = resultSet.getString(User.param_email);
+			String hashedPassword = resultSet.getString(User.param_hashedPassword);
+			String alias = resultSet.getString(User.param_alias);
+			String firstName = resultSet.getString(User.param_firstName);
+			String lastName = resultSet.getString(User.param_lastName);
+			boolean enabled = resultSet.getBoolean(User.param_enabled);
+
+			if(username != null && email != null && hashedPassword != null && firstName != null && lastName != null)
+				{
+				Password password = new Password(hashedPassword,true);
+				returnValue = new User(userID,username,email,password,alias,firstName,lastName,enabled);
+				}
+			}
+		return(returnValue);
+		}
+	}

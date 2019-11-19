@@ -2,7 +2,7 @@ package bugger.dataAccessInterface.dao;
 
 import bugger.dataModel.serverModel.Cookie;
 
-public interface IcookieAccess
+public interface IcookieAccess extends Idao<Cookie>
 	{
 	Cookie CreateNewCookie(String userID);
 	Cookie[] GetUserCookies(String userID);

@@ -16,6 +16,7 @@ public class Permission extends DataModel
 		{
 		this.permissionName = permissionName;
 		this.discription = discription;
+		permissionID = GenerateID(permissionName,discription, 0);
 		}
 
 	public Permission(String permissionID, String permissionName, String discription)

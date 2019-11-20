@@ -41,9 +41,14 @@ public abstract class DataAccess
         return(userAccess.DeleteUser());
         }
 
-    public boolean GetUserExisits(String username)
+    public boolean GetUserExistsByUsername(String username)
         {
-        return(userAccess.GetUserExisits(username));
+        return(userAccess.GetUserExistsByUsername(username));
+        }
+
+    public boolean GetUserExistsByID(String userID)
+        {
+        return(userAccess.GetUserExistsByID(userID));
         }
 
     //------------ Cookies --------------- \\
@@ -78,6 +83,11 @@ public abstract class DataAccess
     public Permission GetPermission(String permissionID,String parameter)
         {
         return(permissionAccess.GetByParameter(permissionID, parameter));
+        }
+
+    public  boolean AddPermissionToUser(String permissionID, String userID)
+        {
+        return (permissionAccess.AddPermissionToUser(permissionID,userID));
         }
 
     public abstract void ValidateDatabase();

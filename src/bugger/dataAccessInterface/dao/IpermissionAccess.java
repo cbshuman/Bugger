@@ -8,5 +8,6 @@ public interface IpermissionAccess extends Idao<Permission>
 	{
 	boolean CreatePermission(Permission permission);
 	boolean GetPermissionExists(String userID);
+	boolean AddPermissionToUser( String permissionID,String userID);
 	List<Permission> GetPermissions(String userID);
 	}

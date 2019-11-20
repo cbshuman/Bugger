@@ -2,6 +2,7 @@ package bugger.dataAccessInterface;
 
 import bugger.command.BuggerCMD;
 import bugger.command.BuggerCommand;
+import bugger.command.permissionCMD.CMD_AddUserPermission;
 import bugger.command.permissionCMD.CMD_CreatePermission;
 import bugger.command.permissionCMD.CMD_GetPermissionByName;
 import bugger.command.userCMD.CMD_CreateUser;
@@ -39,6 +40,8 @@ public class DataProxy
      */
     public static void ValidateDatabase()
         {
+        //Checks that the admin account was made at some point
+        boolean createdAdmin = true;
         //Validates the database in use (creates needed tables and the like)
         dataAccess.ValidateDatabase();
 
@@ -53,6 +56,8 @@ public class DataProxy
             boolean created = createAdmin.CommandSuccessful();
 
             System.out.println("Admin Creation Success: " + created + "\n");
+
+            createdAdmin = false;
             }
 
         //Check that the admin permission exists in the database
@@ -66,6 +71,24 @@ public class DataProxy
             boolean created = createAdminPermission.CommandSuccessful();
 
             System.out.println("Admin Permission Creation Success: " + created + "\n");
+
+            createdAdmin = false;
+            }
+
+        //If either had to be created, make sure to add this to the permissions table
+        if(!createdAdmin)
+            {
+            System.out.println("Adding admin user to Admin security group . . . ");
+            //Get the admin user
+            BuggerCommand<User> adminUserC = BuggerCMD.DoCommand(new CMD_GetUserByUsername("admin"));
+            User adminUser = adminUserC.GetReturnValue();
+
+            BuggerCommand<Permission> adminPer = BuggerCMD.DoCommand(new CMD_GetPermissionByName("Admin"));
+            Permission adminPermiss = adminPer.GetReturnValue();
+
+            BuggerCommand<Boolean> addedAdminToAdmin = BuggerCMD.DoCommand(new CMD_AddUserPermission(adminPermiss.permissionID,adminUser.userID));
+
+            System.out.println("Added admin user to Admin security group success: " + addedAdminToAdmin.CommandSuccessful() + "\n");
             }
         }
 
@@ -96,9 +119,14 @@ public class DataProxy
         return(dataAccess.DeleteUser());
         }
 
-    public static boolean GetUserExisits(String username)
+    public static boolean GetUserExistsByUsername(String username)
         {
-        return(dataAccess.GetUserExisits(username));
+        return(dataAccess.GetUserExistsByUsername(username));
+        }
+
+    public static boolean GetUserExistsByID(String userID)
+        {
+        return(dataAccess.GetUserExistsByID(userID));
         }
 
     // ----  Cookie Data ---- \\
@@ -133,5 +161,10 @@ public class DataProxy
     public static Permission GetPermission(String permissionID,String parameter)
         {
         return(dataAccess.GetPermission(permissionID,parameter));
+        }
+
+    public static boolean AddPermissionToUser(String permissionID, String userID)
+        {
+        return(dataAccess.AddPermissionToUser(permissionID, userID));
         }
     }

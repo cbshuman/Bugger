@@ -31,7 +31,7 @@ public class SQL_UserAccess extends SQL_DAO<User> implements IuserAccess
         {
         boolean returnValue = false;
         
-        if(!GetUserExisits(targetUser.username))
+        if(!GetUserExistsByUsername(targetUser.username))
             {
             returnValue = InsertUserIntoTable(targetUser);
             }
@@ -94,7 +94,7 @@ public class SQL_UserAccess extends SQL_DAO<User> implements IuserAccess
         return(returnValue);
         }
 
-    public boolean GetUserExisits(String username)
+    public boolean GetUserExistsByUsername(String username)
         {
         boolean returnValue = false;
 
@@ -116,6 +116,30 @@ public class SQL_UserAccess extends SQL_DAO<User> implements IuserAccess
 
         return(returnValue);
         }
+
+	@Override
+	public boolean GetUserExistsByID(String userID)
+		{
+		boolean returnValue = false;
+
+		try
+			{
+			Connection connect = SQL_DataAccess.GetDatabaseConnection();
+			Statement statement = connect.createStatement();
+			ResultSet result = statement.executeQuery("SELECT * FROM "+ SQL_DataAccess.table_user +" WHERE " + User.param_userID + " = '" + userID + "'" );
+
+			//Check that we have a result - if we do, then we have a result
+			returnValue = result.next();
+			connect.close();
+			}
+		catch (Exception e)
+			{
+			System.out.println("Cannot find user! Exception: " + e.getMessage());
+			e.printStackTrace();
+			}
+
+		return(returnValue);
+		}
 
 	public boolean CheckForValidID(String id)
 		{

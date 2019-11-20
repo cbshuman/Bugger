@@ -85,10 +85,10 @@ public class SQL_DataAccess extends DataAccess
 
 		    //Create User Permission Table
 		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + table_user_permission + "("
-								    + "permissionID VARCHAR(255) NOT NULL PRIMARY KEY,"
-								    + "userID VARCHAR(255) NOT NULL,"
-								    + "FOREIGN KEY (permissionID) REFERENCES Permission(permissionID),"
-								    + "FOREIGN KEY (userID) REFERENCES User(userID))");
+								    + Permission.param_permissionID + " VARCHAR(255) NOT NULL PRIMARY KEY,"
+								    + User.param_userID + " VARCHAR(255) NOT NULL,"
+								    + "FOREIGN KEY (" + Permission.param_permissionID + ") REFERENCES Permission(" + Permission.param_permissionID + "),"
+								    + "FOREIGN KEY (" + User.param_userID + ") REFERENCES " + table_user + "(" + User.param_userID + "))");
 
 		    //Create User Permission Table
 		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + table_project_permission + "("

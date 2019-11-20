@@ -55,7 +55,7 @@ abstract class SecureHTTPHandler implements HttpHandler
 
 	private boolean ParseCookies(String value)
 		{
-		System.out.println(" -> Looking through cookies . . .");
+		//System.out.println(" -> Looking through cookies . . .");
 		boolean returnValue = false;
 		int semiColonIndex = 0;
 		String currentCookie = value;

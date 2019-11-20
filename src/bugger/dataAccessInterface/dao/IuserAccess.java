@@ -8,5 +8,6 @@ public interface IuserAccess extends Idao<User>
     User GetUserProfile();
     boolean CreateUser(User targetUser);
     boolean DeleteUser();
-    boolean GetUserExisits(String username);
+    boolean GetUserExistsByUsername(String username);
+    boolean GetUserExistsByID(String userID);
     }

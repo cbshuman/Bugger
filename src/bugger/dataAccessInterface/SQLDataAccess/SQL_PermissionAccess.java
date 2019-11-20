@@ -1,5 +1,6 @@
 package bugger.dataAccessInterface.SQLDataAccess;
 
+import bugger.dataAccessInterface.DataProxy;
 import bugger.dataAccessInterface.dao.IpermissionAccess;
 import bugger.dataModel.serverModel.Permission;
 import bugger.dataModel.serverModel.User;
@@ -28,6 +29,42 @@ public class SQL_PermissionAccess extends SQL_DAO<Permission> implements Ipermis
 	public boolean GetPermissionExists(String permissionID)
 		{
 		return (GetByParameter(permissionID,"permissionID") != null);
+		}
+
+	@Override
+	public boolean AddPermissionToUser(String permissionID,String userID)
+		{
+		boolean returnValue = false;
+
+		//System.out.println(userID + "/" + permissionID);
+		//System.out.println("Valid UserID and PermissionID: " + GetPermissionExists(permissionID) + "<- | ->" + DataProxy.GetUserExistsByID(userID));
+
+		if(GetPermissionExists(permissionID) && DataProxy.GetUserExistsByID(userID))
+			{
+			try
+				{
+				Connection connect = SQL_Connector.GetDatabaseConnection();
+				Statement statement = connect.createStatement();
+
+				statement.executeUpdate("INSERT INTO " + SQL_DataAccess.table_user_permission  + "("
+						+ Permission.param_permissionID + ","
+						+ User.param_userID
+						+ ") VALUES ('"
+						+ permissionID + "','"
+						+ userID +  "')");
+
+				connect.close();
+
+				returnValue = true;
+				}
+			catch (Exception e)
+				{
+				System.out.println(e.getMessage());
+				}
+
+			}
+
+		return (returnValue);
 		}
 
 	public boolean InsertPermissionIntoTable(Permission permission)

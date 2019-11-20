@@ -105,11 +105,22 @@ public class SQL_PermissionAccess extends SQL_DAO<Permission> implements Ipermis
 			Statement statement = connect.createStatement();
 
 			//Get the permissions
-			ResultSet result = statement.executeQuery("SELECT * FROM " + SQL_DataAccess.table_user_permission + " WHERE " + User.param_userID + " = '" + userID + "'");
+			ResultSet result = statement.executeQuery("SELECT * FROM " + SQL_DataAccess.table_user_permission
+														+ " LEFT JOIN " + SQL_DataAccess.table_permission
+														+ " ON " + SQL_DataAccess.table_user_permission + "." + Permission.param_permissionID
+														+ " = " + SQL_DataAccess.table_permission + "." + Permission.param_permissionID
+														+ " WHERE " + User.param_userID + " = '" + userID + "'");
 
 			while(result.next())
 				{
-				String permissionID = result.getString("permissionID");
+				String permissionID = result.getString(Permission.param_permissionID);
+				String permissionName = result.getString(Permission.param_permissionName);
+				String discription = result.getString(Permission.param_discription);
+
+				if(permissionID != null && permissionName != null && discription != null)
+					{
+					returnValue.add(new Permission(permissionID,permissionName,discription));
+					}
 
 				}
 

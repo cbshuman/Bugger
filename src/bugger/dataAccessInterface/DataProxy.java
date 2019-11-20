@@ -22,6 +22,7 @@ public class DataProxy
         }    
 
     private static DataAccess dataAccess;
+    private static final String adminString = "admin";
 
     public static void SelectDatabase(DatabaseType database) throws Exception
         {
@@ -52,7 +53,7 @@ public class DataProxy
             //If it doesn't exist, create it
             System.out.println("\n --- Cannot find administrator account, creating it now . . .");
 
-            BuggerCommand<Boolean> createAdmin = BuggerCMD.DoCommand(new CMD_CreateUser("admin","","admin","admin","sudo", "su"));
+            BuggerCommand<Boolean> createAdmin = BuggerCMD.DoCommand(new CMD_CreateUser(adminString,"",adminString,adminString,"sudo", "su"));
             boolean created = createAdmin.CommandSuccessful();
 
             System.out.println("Admin Creation Success: " + created + "\n");
@@ -61,13 +62,13 @@ public class DataProxy
             }
 
         //Check that the admin permission exists in the database
-        BuggerCommand<User> adminPermission = BuggerCMD.DoCommand(new CMD_GetPermissionByName("admin"));
+        BuggerCommand<User> adminPermission = BuggerCMD.DoCommand(new CMD_GetPermissionByName(adminString));
         if(!adminPermission.CommandSuccessful())
             {
             //If it doesn't exist, create it
             System.out.println("\n --- Cannot find administrator permission, creating it now . . .");
 
-            BuggerCommand createAdminPermission = BuggerCMD.DoCommand(new CMD_CreatePermission("Admin", "The Admin Group is for the administration of Bugger, and grants access to administrative functions."));
+            BuggerCommand createAdminPermission = BuggerCMD.DoCommand(new CMD_CreatePermission(adminString, "The Admin Group is for the administration of Bugger, and grants access to administrative functions."));
             boolean created = createAdminPermission.CommandSuccessful();
 
             System.out.println("Admin Permission Creation Success: " + created + "\n");
@@ -80,10 +81,10 @@ public class DataProxy
             {
             System.out.println("Adding admin user to Admin security group . . . ");
             //Get the admin user
-            BuggerCommand<User> adminUserC = BuggerCMD.DoCommand(new CMD_GetUserByUsername("admin"));
+            BuggerCommand<User> adminUserC = BuggerCMD.DoCommand(new CMD_GetUserByUsername(adminString));
             User adminUser = adminUserC.GetReturnValue();
 
-            BuggerCommand<Permission> adminPer = BuggerCMD.DoCommand(new CMD_GetPermissionByName("Admin"));
+            BuggerCommand<Permission> adminPer = BuggerCMD.DoCommand(new CMD_GetPermissionByName(adminString));
             Permission adminPermiss = adminPer.GetReturnValue();
 
             BuggerCommand<Boolean> addedAdminToAdmin = BuggerCMD.DoCommand(new CMD_AddUserPermission(adminPermiss.permissionID,adminUser.userID));

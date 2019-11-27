@@ -22,7 +22,7 @@ public class CMD_GetUserPermissions extends BuggerCommand<List<Permission>>
 		{
 		if(!commandSuccessful)
 			{
-			permissions = DataProxy.GetPermissionList(userID);
+			permissions = DataProxy.GetUserPermissionList(userID);
 			commandSuccessful = (permissions != null);
 			}
 		}

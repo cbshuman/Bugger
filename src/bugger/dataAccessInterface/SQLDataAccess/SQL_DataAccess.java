@@ -2,6 +2,7 @@ package bugger.dataAccessInterface.SQLDataAccess;
 
 import bugger.dataAccessInterface.DataAccess;
 import bugger.dataModel.serverModel.Permission;
+import bugger.dataModel.serverModel.Project;
 import bugger.dataModel.serverModel.User;
 
 import java.sql.Connection;
@@ -29,6 +30,7 @@ public class SQL_DataAccess extends DataAccess
         userAccess = new SQL_UserAccess();
         cookieAccess = new SQL_CookieAccess();
 		permissionAccess = new SQL_PermissionAccess();
+		projectAccess = new SQL_ProjectAccess();
         }
 
     public static Connection GetDatabaseConnection() throws SQLException
@@ -79,9 +81,9 @@ public class SQL_DataAccess extends DataAccess
 
 		    //Create a Table to store Project Information
 		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + table_project + "("
-								    + "projectID VARCHAR(255) NOT NULL PRIMARY KEY,"
-								    + "projectName VARCHAR(255) NOT NULL,"
-								    + "discription TEXT)");
+								    + Project.param_projectID + " VARCHAR(255) NOT NULL PRIMARY KEY,"
+									+ Project.param_projectName + " VARCHAR(255) NOT NULL,"
+									+ Project.param_description + " TEXT)");
 
 		    //Create User Permission Table
 		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + table_user_permission + "("

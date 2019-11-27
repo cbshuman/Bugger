@@ -19,7 +19,7 @@ public abstract class CMD_GetUser extends BuggerCommand<User>
 
 		if(user != null)
 			{
-			List<Permission> permissionList = DataProxy.GetPermissionList(user.userID);
+			List<Permission> permissionList = DataProxy.GetUserPermissionList(user.userID);
 			Permission[] permissions = new Permission[permissionList.size()];
 			permissionList.toArray(permissions);
 			user.permissions = permissions;

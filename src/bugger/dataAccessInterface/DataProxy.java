@@ -16,6 +16,8 @@ import java.util.List;
 
 public class DataProxy
     {
+
+
     public enum DatabaseType
         {
         SQL
@@ -154,9 +156,9 @@ public class DataProxy
         return(dataAccess.CreateNewPermission(permission));
         }
 
-    public static List<Permission> GetPermissionList(String userID)
+    public static List<Permission> GetUserPermissionList(String userID)
         {
-        return(dataAccess.GetPermissionList(userID));
+        return(dataAccess.GetUserPermissionList(userID));
         }
 
     public static Permission GetPermission(String permissionID,String parameter)
@@ -167,5 +169,12 @@ public class DataProxy
     public static boolean AddPermissionToUser(String permissionID, String userID)
         {
         return(dataAccess.AddPermissionToUser(permissionID, userID));
+        }
+
+    // ----  Project Data ---- \\
+
+    public static boolean CreateNewProject(String projectName, String projectDisc, String[] permissions, String defaultAssignee)
+        {
+        return (dataAccess.AddProject(projectName,projectDisc,permissions,defaultAssignee));
         }
     }

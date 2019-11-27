@@ -95,7 +95,7 @@ public class SQL_PermissionAccess extends SQL_DAO<Permission> implements Ipermis
 		}
 
 	@Override
-	public List<Permission> GetPermissions(String userID)
+	public List<Permission> GetUserPermissionList(String userID)
 		{
 		List<Permission> returnValue = new ArrayList<>();
 

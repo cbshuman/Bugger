@@ -1,6 +1,6 @@
 package bugger.httpshandlers;
 
-import bugger.dataAccess.ProjectData;
+import bugger.dataAccessInterface.DataProxy;
 import bugger.dataModel.serverModel.Project;
 import bugger.utility.Utility;
 import com.google.gson.Gson;
@@ -37,7 +37,7 @@ public class ProjectHandler extends SecureHTTPHandler
 			{
 			System.out.println(" -> Creating Project");
 			ProjectJSON newProject = new Gson().fromJson(Utility.InputStreamToString(exchange.getRequestBody()), ProjectJSON.class);
-			if(ProjectData.CreateNewProject(newProject.projectName,newProject.projectDisc) != null)
+			if(DataProxy.CreateNewProject(newProject.projectName,newProject.projectDisc,newProject.permissions,newProject.defaultAssignee))
 				{
 				returnMessage = "Created new project successfully!";
 				}
@@ -71,7 +71,8 @@ public class ProjectHandler extends SecureHTTPHandler
 		System.out.println(" -> Authenticating Cookie: ");
 		if(HasValidCookie(headers))
 			{
-			Project[] projects = ProjectData.GetProjects();
+			Project[] projects = null; //TODO: Fix this
+
 			ProjectJSON[] jsonResponce = new ProjectJSON[projects.length];
 
 			for(int i = 0; i < projects.length; i++)

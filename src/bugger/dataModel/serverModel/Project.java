@@ -1,9 +1,11 @@
 package bugger.dataModel.serverModel;
 
-import bugger.dataAccess.ProjectData;
-
 public class Project
 	{
+	public final static String param_projectID = "projectID";
+	public final static String param_projectName = "projectName";
+	public final static String param_description = "description";
+
 	public String projectID;
 	public String projectName;
 	public String discription;
@@ -33,8 +35,9 @@ public class Project
 		return(returnValue.toString());
 		}
 
+	//Yea. . . likely going to deprecate this
 	public void GetPermissions()
 		{
-		permissions = ProjectData.GetProjectPermissions(projectID);
+		permissions = new Permission[0];
 		}
 	}

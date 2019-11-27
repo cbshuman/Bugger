@@ -110,7 +110,7 @@ public class PermissionHandler extends SecureHTTPHandler
 		System.out.println(" -> Authenticating Cookie: ");
 		if(HasValidCookie(headers))
 			{
-			List<Permission> permissionList = DataProxy.GetPermissionList(GetHandlerUserID());
+			List<Permission> permissionList = DataProxy.GetUserPermissionList(GetHandlerUserID());
 
 			Permission[] permissions = new Permission[permissionList.size()];
 			permissionList.toArray(permissions);

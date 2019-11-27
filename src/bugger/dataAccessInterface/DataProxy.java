@@ -10,14 +10,13 @@ import bugger.command.userCMD.CMD_GetUserByUsername;
 import bugger.dataAccessInterface.SQLDataAccess.SQL_DataAccess;
 import bugger.dataModel.serverModel.Cookie;
 import bugger.dataModel.serverModel.Permission;
+import bugger.dataModel.serverModel.Project;
 import bugger.dataModel.serverModel.User;
 
 import java.util.List;
 
 public class DataProxy
     {
-
-
     public enum DatabaseType
         {
         SQL
@@ -49,7 +48,7 @@ public class DataProxy
         dataAccess.ValidateDatabase();
 
         //Check that the admin account exists in the table
-        BuggerCommand<User> adminExists = BuggerCMD.DoCommand(new CMD_GetUserByUsername("admin"));
+        BuggerCommand adminExists = BuggerCMD.DoCommand(new CMD_GetUserByUsername("admin"));
         if(!adminExists.CommandSuccessful())
             {
             //If it doesn't exist, create it
@@ -64,7 +63,7 @@ public class DataProxy
             }
 
         //Check that the admin permission exists in the database
-        BuggerCommand<User> adminPermission = BuggerCMD.DoCommand(new CMD_GetPermissionByName(adminString));
+        BuggerCommand adminPermission = BuggerCMD.DoCommand(new CMD_GetPermissionByName(adminString));
         if(!adminPermission.CommandSuccessful())
             {
             //If it doesn't exist, create it
@@ -89,7 +88,7 @@ public class DataProxy
             BuggerCommand<Permission> adminPer = BuggerCMD.DoCommand(new CMD_GetPermissionByName(adminString));
             Permission adminPermiss = adminPer.GetReturnValue();
 
-            BuggerCommand<Boolean> addedAdminToAdmin = BuggerCMD.DoCommand(new CMD_AddUserPermission(adminPermiss.permissionID,adminUser.userID));
+            BuggerCommand addedAdminToAdmin = BuggerCMD.DoCommand(new CMD_AddUserPermission(adminPermiss.permissionID,adminUser.userID));
 
             System.out.println("Added admin user to Admin security group success: " + addedAdminToAdmin.CommandSuccessful() + "\n");
             }
@@ -173,8 +172,9 @@ public class DataProxy
 
     // ----  Project Data ---- \\
 
-    public static boolean CreateNewProject(String projectName, String projectDisc, String[] permissions, String defaultAssignee)
+    public static boolean CreateNewProject(Project targetProject)
         {
-        return (dataAccess.AddProject(projectName,projectDisc,permissions,defaultAssignee));
+        //System.out.println(" --> Sending down the Call stack :" + targetProject);
+        return (dataAccess.AddProject(targetProject));
         }
     }

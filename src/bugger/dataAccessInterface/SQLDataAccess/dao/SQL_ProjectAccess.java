@@ -1,5 +1,6 @@
-package bugger.dataAccessInterface.SQLDataAccess;
+package bugger.dataAccessInterface.SQLDataAccess.dao;
 
+import bugger.dataAccessInterface.SQLDataAccess.SQL_DataAccess;
 import bugger.dataAccessInterface.dao.IprojectAccess;
 import bugger.dataModel.serverModel.Permission;
 import bugger.dataModel.serverModel.Project;
@@ -19,42 +20,59 @@ public class SQL_ProjectAccess extends SQL_DAO<Project> implements IprojectAcces
 		return false;
 		}
 
-	public boolean  CreateProject(String projectName, String projectDisc, String[] permissions, String defaultAssignee)
+	public boolean CreateProject(Project targetProject)
 		{
+		//Check that a project with the same name doesn't already exist
 		boolean returnValue = false;
 
+		if(GetByParameter(targetProject.projectName, Project.param_projectName) == null)
+			{
+			returnValue = InsertProject(targetProject);
+			}
 
 		return(returnValue);
 		}
 
-	@Override
-	protected Project ParseSQLDataSet(ResultSet resultSet) throws SQLException
+	private boolean InsertProject(Project targetProject)
 		{
-		Project returnValue = null;
+		//System.out.println(" -- > Creating Project");
+		boolean returnValue = false;
 
-		//Check that we have a result
-		if(resultSet.next())
+		try
 			{
-			String projectID = resultSet.getString(Project.param_projectID);
-			String description = resultSet.getString(Project.param_description);
-			String projectName = resultSet.getString(Project.param_projectName);
+			Connection connect = SQL_DataAccess.GetDatabaseConnection();
+			Statement statement = connect.createStatement();
 
-			if(projectID != null && description != null && projectName != null)
-				{
-				returnValue = new Project(projectID,description,projectName);
-				}
+			statement.executeUpdate("INSERT INTO " + SQL_DataAccess.table_project +"("
+					+ Project.param_projectID + ","
+					+ Project.param_projectName + ","
+					+ Project.param_defaultAssign + ","
+					+ Project.param_description
+					+ ") VALUES ('"
+					+ targetProject.projectID + "','"
+					+ targetProject.projectName + "','"
+					+ targetProject.defaultAssign + "','"
+					+ targetProject.discription + "')");
+
+			connect.close();
 			}
+		catch (Exception e)
+			{
+			System.out.println("Trouble creating Project!");
+			e.printStackTrace();
+			}
+
 		return(returnValue);
 		}
 
 	@Override
 	public Project GetByParameter(String query, String parameter)
 		{
-		return GetByParameter(query,parameter,SQL_DataAccess.table_project);
+		return GetByParameter(query,parameter, SQL_DataAccess.table_project);
 		}
 
 	//Gets a project based on a parameter
-	public static Project GetProjectByParameter(String query, String parameter)
+	public Project GetProjectByParameter(String query, String parameter)
 		{
 		Project returnValue = null;
 
@@ -84,17 +102,38 @@ public class SQL_ProjectAccess extends SQL_DAO<Project> implements IprojectAcces
 			}
 		catch (Exception e)
 			{
-			System.out.println("Cannot find user! Exception: " + e.getMessage());
+			System.out.println("Cannot find project! Exception: " + e.getMessage());
 			}
 
 		return(returnValue);
 		}
 
-	public static boolean AddProjectPermission(String projectName,String permisionID)
+	@Override
+	protected Project ParseSQLDataSet(ResultSet resultSet) throws SQLException
+		{
+		Project returnValue = null;
+
+		//Check that we have a result
+		if(resultSet.next())
+			{
+			String projectID = resultSet.getString(Project.param_projectID);
+			String description = resultSet.getString(Project.param_description);
+			String projectName = resultSet.getString(Project.param_projectName);
+
+			if(projectID != null && description != null && projectName != null)
+				{
+				returnValue = new Project(projectID,description,projectName);
+				}
+			}
+		return(returnValue);
+		}
+
+	public boolean AddProjectPermission(String projectName,String permisionID)
 		{
 		boolean returnValue = false;
 		//Load the user and permission
 		Project targetProject = GetProjectByParameter(projectName, "projectID");
+		//TODO : Add get project permission
 		Permission targetPermission = null;
 
 		if(targetProject != null || targetPermission != null)
@@ -126,7 +165,7 @@ public class SQL_ProjectAccess extends SQL_DAO<Project> implements IprojectAcces
 	*/
 	public List<Project> GetAllProjects(int min, int max)
 		{
-		ArrayList<Project> projectList = new ArrayList<Project>();
+		ArrayList<Project> projectList = new ArrayList<>();
 
 		String query = "SELECT * FROM " + SQL_DataAccess.table_project;
 

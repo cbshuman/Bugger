@@ -1,5 +1,6 @@
-package bugger.dataAccessInterface.SQLDataAccess;
+package bugger.dataAccessInterface.SQLDataAccess.dao;
 
+import bugger.dataAccessInterface.SQLDataAccess.SQL_DataAccess;
 import bugger.dataAccessInterface.dao.IcookieAccess;
 import bugger.dataModel.serverModel.Cookie;
 
@@ -14,18 +15,17 @@ public class SQL_CookieAccess extends SQL_DAO<Cookie> implements IcookieAccess
 	@Override
 	public Cookie GetByParameter(String query, String parameter)
 		{
-		return GetByParameter(query,parameter,SQL_DataAccess.table_cookies);
+		return GetByParameter(query,parameter, SQL_DataAccess.table_cookies);
 		}
 
 	@Override
 	protected Cookie ParseSQLDataSet(ResultSet resultSet) throws SQLException
 		{
-		Cookie returnCookie = null;
-
 		String userID = resultSet.getString(Cookie.param_userID);
 		String cookieID = resultSet.getString(Cookie.param_cookieID);
 		String timestamp = resultSet.getString(Cookie.param_timestamp);
-		returnCookie = new Cookie(cookieID,userID,timestamp);
+
+		Cookie returnCookie = new Cookie(cookieID, userID, timestamp);
 
 		return returnCookie;
 		}

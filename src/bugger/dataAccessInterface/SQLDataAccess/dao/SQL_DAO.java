@@ -1,4 +1,6 @@
-package bugger.dataAccessInterface.SQLDataAccess;
+package bugger.dataAccessInterface.SQLDataAccess.dao;
+
+import bugger.dataAccessInterface.SQLDataAccess.SQL_DataAccess;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,7 +14,7 @@ public abstract class SQL_DAO<T>
 		return false;
 		}
 
-	protected T GetByParameter(String query, String parameter, String table)
+	T GetByParameter(String query, String parameter, String table)
 		{
 		//The user that will be returned, may return null if not found
 		T returnValue = null;

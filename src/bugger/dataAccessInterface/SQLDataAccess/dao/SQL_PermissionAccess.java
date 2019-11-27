@@ -1,6 +1,8 @@
-package bugger.dataAccessInterface.SQLDataAccess;
+package bugger.dataAccessInterface.SQLDataAccess.dao;
 
 import bugger.dataAccessInterface.DataProxy;
+import bugger.dataAccessInterface.SQLDataAccess.SQL_Connector;
+import bugger.dataAccessInterface.SQLDataAccess.SQL_DataAccess;
 import bugger.dataAccessInterface.dao.IpermissionAccess;
 import bugger.dataModel.serverModel.Permission;
 import bugger.dataModel.serverModel.User;
@@ -23,6 +25,27 @@ public class SQL_PermissionAccess extends SQL_DAO<Permission> implements Ipermis
 			returnValue = InsertPermissionIntoTable(permission);
 			}
 		return (returnValue);
+		}
+
+	private boolean InsertPermissionIntoTable(Permission permission)
+		{
+		boolean returnValue = false;
+		try
+			{
+			Connection connect = SQL_Connector.GetDatabaseConnection();
+			Statement statement = connect.createStatement();
+			statement.executeUpdate("INSERT INTO Permission(permissionID,permissionName,discription) VALUES ('"
+					+ permission.permissionID + "','"
+					+ permission.permissionName + "','"
+					+ permission.discription + "')");
+			connect.close();
+			}
+		catch (Exception e)
+			{
+			System.out.println(e.getMessage());
+			}
+
+		return(returnValue);
 		}
 
 	@Override
@@ -65,27 +88,6 @@ public class SQL_PermissionAccess extends SQL_DAO<Permission> implements Ipermis
 			}
 
 		return (returnValue);
-		}
-
-	public boolean InsertPermissionIntoTable(Permission permission)
-		{
-		boolean returnValue = false;
-		try
-			{
-			Connection connect = SQL_Connector.GetDatabaseConnection();
-			Statement statement = connect.createStatement();
-			statement.executeUpdate("INSERT INTO Permission(permissionID,permissionName,discription) VALUES ('"
-					+ permission.permissionID + "','"
-					+ permission.permissionName + "','"
-					+ permission.discription + "')");
-			connect.close();
-			}
-		catch (Exception e)
-			{
-			System.out.println(e.getMessage());
-			}
-
-		return(returnValue);
 		}
 
 	@Override

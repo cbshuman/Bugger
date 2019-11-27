@@ -1,6 +1,10 @@
 package bugger.dataAccessInterface.SQLDataAccess;
 
 import bugger.dataAccessInterface.DataAccess;
+import bugger.dataAccessInterface.SQLDataAccess.dao.SQL_CookieAccess;
+import bugger.dataAccessInterface.SQLDataAccess.dao.SQL_PermissionAccess;
+import bugger.dataAccessInterface.SQLDataAccess.dao.SQL_ProjectAccess;
+import bugger.dataAccessInterface.SQLDataAccess.dao.SQL_UserAccess;
 import bugger.dataModel.serverModel.Permission;
 import bugger.dataModel.serverModel.Project;
 import bugger.dataModel.serverModel.User;
@@ -83,6 +87,7 @@ public class SQL_DataAccess extends DataAccess
 		    statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + table_project + "("
 								    + Project.param_projectID + " VARCHAR(255) NOT NULL PRIMARY KEY,"
 									+ Project.param_projectName + " VARCHAR(255) NOT NULL,"
+									+ Project.param_defaultAssign + " VARCHAR(255) NOT NULL,"
 									+ Project.param_description + " TEXT)");
 
 		    //Create User Permission Table

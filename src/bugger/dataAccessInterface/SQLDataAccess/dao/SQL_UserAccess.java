@@ -1,5 +1,6 @@
-package bugger.dataAccessInterface.SQLDataAccess;
+package bugger.dataAccessInterface.SQLDataAccess.dao;
 
+import bugger.dataAccessInterface.SQLDataAccess.SQL_DataAccess;
 import bugger.dataAccessInterface.dao.IuserAccess;
 import bugger.dataModel.serverModel.Password;
 import bugger.dataModel.serverModel.User;
@@ -42,7 +43,7 @@ public class SQL_UserAccess extends SQL_DAO<User> implements IuserAccess
 	@Override
 	public User GetByParameter(String query, String parameter)
 		{
-		return(GetByParameter(query,parameter,SQL_DataAccess.table_user));
+		return(GetByParameter(query,parameter, SQL_DataAccess.table_user));
 		}
 
 	private boolean InsertUserIntoTable(User targetUser)
@@ -90,6 +91,8 @@ public class SQL_UserAccess extends SQL_DAO<User> implements IuserAccess
     public boolean DeleteUser()
         {
         boolean returnValue = false;
+
+        //TODO : Figure out if we're going to remove users or just disable them
 
         return(returnValue);
         }

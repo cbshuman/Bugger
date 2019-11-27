@@ -15,11 +15,11 @@ public class ProjectHandler extends SecureHTTPHandler
 	{
 	public void handle(HttpExchange exchange) throws IOException
 		{
-		if(exchange.getRequestMethod().toLowerCase().equals("post") == true)
+		if(exchange.getRequestMethod().toLowerCase().equals("post"))
 			{
 			CreateNewProject(exchange);
 			}
-		else if(exchange.getRequestMethod().toLowerCase().equals("get") == true)
+		else if(exchange.getRequestMethod().toLowerCase().equals("get"))
 			{
 			GetProjects(exchange);
 			}
@@ -27,18 +27,22 @@ public class ProjectHandler extends SecureHTTPHandler
 
 	private void CreateNewProject(HttpExchange exchange) throws IOException
 		{
-	    System.out.println("\n -- Creating a new Projects -- ");
-
-		String returnMessage = "";
 		Headers headers = exchange.getRequestHeaders();
+		String returnMessage = "";
 
+		System.out.println("\n -- Creating a new Project -- ");
 		System.out.println(" -> Authenticating Cookie: ");
 		if(HasValidCookie(headers))
 			{
 			System.out.println(" -> Creating Project");
 			ProjectJSON newProject = new Gson().fromJson(Utility.InputStreamToString(exchange.getRequestBody()), ProjectJSON.class);
-			if(DataProxy.CreateNewProject(newProject.projectName,newProject.projectDisc,newProject.permissions,newProject.defaultAssignee))
+
+			Project targetProject = new Project(newProject.projectName,newProject.projectDisc,newProject.defaultAssignee);
+
+			if(DataProxy.CreateNewProject(targetProject))
 				{
+				//TODO: Add project permissions in here
+
 				returnMessage = "Created new project successfully!";
 				}
 			else
@@ -64,11 +68,10 @@ public class ProjectHandler extends SecureHTTPHandler
 	private void GetProjects(HttpExchange exchange) throws IOException
 		{
         System.out.println("\n -- Getting Projects -- ");
-
-		String returnMessage = "";
-		Headers headers = exchange.getRequestHeaders();
-
 		System.out.println(" -> Authenticating Cookie: ");
+		//Get the headers
+		Headers headers = exchange.getRequestHeaders();
+		String returnMessage = "";
 		if(HasValidCookie(headers))
 			{
 			Project[] projects = null; //TODO: Fix this
@@ -98,17 +101,15 @@ public class ProjectHandler extends SecureHTTPHandler
 
 	private class ProjectJSON
 		{
-		public String projectName;
-		public String defaultAssignee;
-		public String projectDisc;
+		String projectName;
+		String defaultAssignee;
+		String projectDisc;
 		public String[] permissions;
-		public String[] bugs;
 
 		ProjectJSON(Project targetProject)
 			{
 			this.projectName = targetProject.projectName;
 			this.projectDisc = targetProject.discription;
-			this.defaultAssignee = defaultAssignee;
 
 			permissions = new String[targetProject.permissions.length];
 
